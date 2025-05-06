@@ -5,8 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Match_Analysis.View"
         mc:Ignorable="d"
-        Title="EditMatch" Height="450" Width="800">
+        Title="EditMatch" Height="400" Width="350">
     <Grid>
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
+
+        </Grid.RowDefinitions>
+
+
+        <DatePicker Grid.Row="0" Width="300" Height="25" />
+        <ComboBox Text="Первая команда" Grid.Row="1" Width="300" Height="20"/>
+        <ComboBox Text="Вторая команда" Grid.Row="2" Width="300" Height="20"/>
+        <TextBox Text="Счет первой команды " Grid.Row="3" Width="300" Height="20" HorizontalAlignment="Center" />
+        <TextBox Text="Счет второй команды" Grid.Row="4" Width="300" Height="20" HorizontalAlignment="Center" />
+        <Button Grid.Row="5" Width="300" Height="20" Content="Добавить информацию о игроках первой команды"/>
+        <Button Grid.Row="6" Width="300" Height="20" Content="Добавить информацию о игроках второй команды"/>
+        <Button Grid.Row="7" Width="300" Height="20" Content="Применить изменения"/>
         
     </Grid>
 </Window>

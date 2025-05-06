@@ -1,0 +1,38 @@
+﻿<Window x:Class="Match_Analysis.View.MatchHistory"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Match_Analysis.View"
+        mc:Ignorable="d"
+        Title="MatchHistory" Height="400" Width="500">
+    <Grid>
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="7*"/>
+            <RowDefinition Height="98*"/>
+
+        </Grid.RowDefinitions>
+
+        <ListView  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Match}" SelectedItem="{Binding SelectedMatch}">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Лист Книг" />
+                </ContextMenu>
+            </ListView.ContextMenu>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Первая команда" DisplayMemberBinding="{Binding FirstName}"/>
+                    <GridViewColumn Header="Счет первой команды" DisplayMemberBinding="{Binding FirstName}"/>
+                    <GridViewColumn Header="Счет второй команды" DisplayMemberBinding="{Binding FirstName}"/>
+                    <GridViewColumn Header="Вторая команда" DisplayMemberBinding="{Binding FirstName}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+
+        <Button Width="100" HorizontalAlignment="Right" />
+
+    </Grid>
+</Window>
