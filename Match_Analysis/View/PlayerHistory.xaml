@@ -1,0 +1,39 @@
+﻿<Window x:Class="Match_Analysis.View.PlayerHistory"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Match_Analysis.View"
+        mc:Ignorable="d"
+        Title="PlayerHistory" Height="450" Width="800">
+    <Grid>
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="7*"/>
+            <RowDefinition Height="98*"/>
+
+        </Grid.RowDefinitions>
+
+        <ListView  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Player}" SelectedItem="{Binding SelectedPlayer}">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Лист Книг" />
+                </ContextMenu>
+            </ListView.ContextMenu>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="ФИО" DisplayMemberBinding="{Binding FirstName}"/>
+                    <GridViewColumn Header="Голы" DisplayMemberBinding="{Binding FirstName}"/>
+                    <GridViewColumn Header="Голевые передачи" DisplayMemberBinding="{Binding FirstName}"/>
+                    <GridViewColumn Header="Название команды" DisplayMemberBinding="{Binding FirstName}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+
+        <Button Width="100" HorizontalAlignment="Right" Grid.Row="0"/>
+        <ComboBox Width="300" HorizontalAlignment="Left" Grid.Row="0"/>
+
+    </Grid>
+</Window>
