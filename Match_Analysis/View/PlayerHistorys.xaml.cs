@@ -17,9 +17,9 @@ namespace Match_Analysis.View
     /// <summary>
     /// Логика взаимодействия для PlayerHistory.xaml
     /// </summary>
-    public partial class PlayerHistory : Window
+    public partial class PlayerHistorys : Window
     {
-        public PlayerHistory()
+        public PlayerHistorys()
         {
             InitializeComponent();
         }
