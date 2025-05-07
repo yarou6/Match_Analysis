@@ -36,7 +36,9 @@
         </ListView>
 
 
-        <Button Width="100" HorizontalAlignment="Right" />
+        <Button Width="100" HorizontalAlignment="Right"  />
+        <Image Margin="1164,223,-1099,-190" Grid.Row="1" Source="/373841f4fa5bc1e414c83fc9af2f92fb.jpg" Stretch="Fill"/>
+        <Image Margin="720,-8,20,397" Source="/png-transparent-green-arrow-computer-icons-left-arrow-angle-text-rectangle-thumbnail (1).png" Stretch="Fill" Grid.RowSpan="2"/>
 
     </Grid>
 </Window>
