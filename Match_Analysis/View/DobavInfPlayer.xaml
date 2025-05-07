@@ -19,8 +19,10 @@
 
 
         <TextBox Text="Название команды" Grid.Row="0" Width="300" Height="20" HorizontalAlignment="Center" />
-        <ComboBox Text="Кто забил" Grid.Row="1" Width="300" Height="20"/>
-        <ComboBox Text="Кто отдал голевой пас" Grid.Row="2" Width="300" Height="20"/>
+		<Label  Content="Кто забил гол" Grid.Row="1" Margin="21,0,0,0"/>
+        <ComboBox Text="Кто забил" Grid.Row="1" Width="300" Height="20" VerticalAlignment="Bottom"/>
+        <Label  Content="Кто отдал голевой пас" Grid.Row="2" Margin="21,0,0,0"/>
+        <ComboBox Grid.Row="2" Width="300" Height="20" VerticalAlignment="Bottom"/>
         <Button Grid.Row="3" Width="300" Height="20" Content="Применить изменения"/>
 
     </Grid>

@@ -45,7 +45,9 @@
             </ListView.ContextMenu>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Название команды" DisplayMemberBinding="{Binding FirstName}"/>
+                    <GridViewColumn Header="Название команды" DisplayMemberBinding="{Binding Title}"/>
+                    <GridViewColumn Header="Тренер" DisplayMemberBinding="{Binding Coach}"/>
+                    <GridViewColumn Header="Город" DisplayMemberBinding="{Binding City}"/>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -58,9 +60,9 @@
             </ListView.ContextMenu>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="ФИО" DisplayMemberBinding="{Binding FirstName}"/>
-                    <GridViewColumn Header="Позиция" DisplayMemberBinding="{Binding FirstName}"/>
-                    <GridViewColumn Header="Возвраст" DisplayMemberBinding="{Binding FirstName}"/>
+                    <GridViewColumn Header="ФИО" DisplayMemberBinding="{Binding FIO}"/>
+                    <GridViewColumn Header="Позиция" DisplayMemberBinding="{Binding PlayerPosition}"/>
+                    <GridViewColumn Header="Возвраст" DisplayMemberBinding="{Binding Age}"/>
                 </GridView>
             </ListView.View>
         </ListView>
