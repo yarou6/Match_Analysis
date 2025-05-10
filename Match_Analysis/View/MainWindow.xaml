@@ -4,8 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Match_Analysis.View"
+        xmlns:mvvm="clr-namespace:Match_Analysis.VM"
+        DataContext="{DynamicResource vm}"
         mc:Ignorable="d"
         Height="400" Width="800">
+    <Window.Resources>
+        <mvvm:MainVM x:Key="vm"/>
+    </Window.Resources>
     <Grid>
         
         <Grid.ColumnDefinitions>
@@ -28,19 +33,21 @@
 
         <StackPanel  Grid.Column="3" Grid.RowSpan="2" Orientation="Vertical">
 
-            <Button Content="Создать матч" Command="{Binding AddAuthor}" Width="125" Height="50" Margin="0,20,0,0"/>
-            <Button Content="История матчей" Command="{Binding EditAuthor}" Width="125" Height="50"  Margin="0,20,0,0"/>
-            <Button Content="Турнирная таблица" Command="{Binding RemoveAuthor}" Width="125" Height="50" Margin="0,20,0,0"/>
-            <Button Content="Статистика игрока" Command="{Binding RemoveAuthor}" Width="125" Height="50" Margin="0,20,0,0"/>
-            <Button Content="Турнирная статистика" Command="{Binding RemoveAuthor}" Width="125" Height="50" Margin="0,20,0,0"/>
+            <Button Content="Создать матч" Command="{Binding AddMatch}" Width="125" Height="50" Margin="0,20,0,0"/>
+            <Button Content="История матчей" Command="{Binding HistMatch}" Width="125" Height="50"  Margin="0,20,0,0"/>
+            <Button Content="Турнирная таблица" Command="{Binding TournTable}" Width="125" Height="50" Margin="0,20,0,0"/>
+            <Button Content="История игрока" Command="{Binding HistPlayer}" Width="125" Height="50" Margin="0,20,0,0"/>
+            <Button Content="Турнирная статистика" Command="{Binding StatTourn}" Width="125" Height="50" Margin="0,20,0,0"/>
             
         </StackPanel>
 
 
-        <ListView  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Team}" SelectedItem="{Binding SelectedTeam}">
+        <ListView  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Teams}" SelectedItem="{Binding SelectedTeam}">
             <ListView.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Лист Книг" />
+                    <MenuItem Header="Добавить команду" Command="{Binding AddTeam}"/>
+                    <MenuItem Header="Изменить команду" Command="{Binding EditTeam}"/>
+                    <MenuItem Header="Удалить команду" Command="{Binding RemoveTeam}"/>
                 </ContextMenu>
             </ListView.ContextMenu>
             <ListView.View>
@@ -52,17 +59,19 @@
             </ListView.View>
         </ListView>
 
-        <ListView  Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Player}" SelectedItem="{Binding SelectedPlayer}">
+        <ListView  Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Players}" SelectedItem="{Binding SelectedPlayer}">
             <ListView.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Лист Книг" />
+                    <MenuItem Header="Добавить игрока" Command="{Binding AddPlayer}"/>
+                    <MenuItem Header="Изменить игрока" Command="{Binding EditPlayer}"/>
+                    <MenuItem Header="Удалить игрока" Command="{Binding RemovePlayer}"/>
                 </ContextMenu>
             </ListView.ContextMenu>
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ФИО" DisplayMemberBinding="{Binding FIO}"/>
-                    <GridViewColumn Header="Позиция" DisplayMemberBinding="{Binding PlayerPosition}"/>
                     <GridViewColumn Header="Возвраст" DisplayMemberBinding="{Binding Age}"/>
+                    <GridViewColumn Header="Позиция" DisplayMemberBinding="{Binding PlayerPosition}"/>
                 </GridView>
             </ListView.View>
         </ListView>

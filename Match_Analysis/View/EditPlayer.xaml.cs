@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Match_Analysis.Model;
+using Match_Analysis.VM;
 
 namespace Match_Analysis.View
 {
@@ -19,9 +21,12 @@ namespace Match_Analysis.View
     /// </summary>
     public partial class EditPlayer : Window
     {
-        public EditPlayer()
+        public EditPlayer(Player selectedPlayer)
         {
             InitializeComponent();
+
+            ((AddEditPlayer)this.DataContext).SetClose(Close);
+            ((AddEditPlayer)this.DataContext).SetPlayer(selectedPlayer);
         }
     }
 }

@@ -13,5 +13,7 @@ namespace Match_Analysis.Model
         public string Coach { get; set; }
         public string City { get; set; }
 
+        public List<Player> Players { get; set; } = new();
+
     }
 }

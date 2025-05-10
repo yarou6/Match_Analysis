@@ -25,18 +25,16 @@ namespace Match_Analysis.Model
 
             if (connection.OpenConnection())
             {
-                MySqlCommand cmd = connection.CreateCommand("insert into `player` Values (0, @Age, @PlayerPosition, @Surname, @Name, @Patrnymic, @TeamId);select LAST_INSERT_ID();");
+                MySqlCommand cmd = connection.CreateCommand("insert into `player` Values (0, @age, @PlayerPosition, @Surname, @Name, @Patronymic, @TeamId);select LAST_INSERT_ID();");
 
                 // путем добавления значений в запрос через параметры мы используем экранирование опасных символов
-                cmd.Parameters.Add(new MySqlParameter("Age", player.Age));
+                cmd.Parameters.Add(new MySqlParameter("age", player.Age));
                 cmd.Parameters.Add(new MySqlParameter("PlayerPosition", player.PlayerPosition));
                 cmd.Parameters.Add(new MySqlParameter("Surname", player.Surname));
                 cmd.Parameters.Add(new MySqlParameter("Name", player.Name));
                 cmd.Parameters.Add(new MySqlParameter("TeamId", player.TeamId));
-                // можно указать параметр через отдельную переменную
-                MySqlParameter Patronymic = new MySqlParameter("Patronymic", player.Patronymic);
-                cmd.Parameters.Add(Patronymic);
-                
+                cmd.Parameters.Add(new MySqlParameter("Patronymic", player.Patronymic));
+
                 try
                 {
                     // выполняем запрос через ExecuteScalar, получаем id вставленной записи
@@ -71,7 +69,7 @@ namespace Match_Analysis.Model
 
             if (connection.OpenConnection())
             {
-                var command = connection.CreateCommand("select `id`, `age`, `player_position`, `surname`, `name`, `patronymic`, `team_id` from `team` ");
+                var command = connection.CreateCommand("SELECT b.id, b.team_id, b.name, b.player_position, b.age, b.surname, b.patronymic, a.title, a.coach, a.city FROM player b JOIN team a ON b.team_id = a.id ");
                 try
                 {
                     // выполнение запроса, который возвращает результат-таблицу
@@ -103,15 +101,36 @@ namespace Match_Analysis.Model
                         if (!dr.IsDBNull(6))
                             patronymic = dr.GetString("patronymic");
 
+                        string title = string.Empty;
+                        if (!dr.IsDBNull(7))
+                            title = dr.GetString("title");
+                        string coach = string.Empty;
+                        if (!dr.IsDBNull(8))
+                            coach = dr.GetString("coach");
+                        string city = string.Empty;
+                        if (!dr.IsDBNull(9))
+                            city = dr.GetString("city");
+
 
                         Player player = new Player
                         {
-                            Id = team_id,
+                            Id = id,
+                            TeamId = team_id,
                             Age = age,
                             PlayerPosition = player_position,
                             Surname = surname,
                             Name = name,
                             Patronymic = patronymic,
+                            
+                        };
+
+
+                        Team team = new Team
+                        {
+                            Id = team_id,
+                            Title = title,
+                            Coach = coach,
+                            City = city,
                         };
 
                     }
@@ -122,10 +141,10 @@ namespace Match_Analysis.Model
                 }
             }
             connection.CloseConnection();
-            return books;
+            return players;
         }
 
-        internal bool Update(Book edit)
+        internal bool Update(Player edit)
         {
             bool result = false;
             if (connection == null)
@@ -133,11 +152,12 @@ namespace Match_Analysis.Model
 
             if (connection.OpenConnection())
             {
-                var mc = connection.CreateCommand($"update `books` set `title`=@title, `year_published`=@year_published, `genre`=@genre, `is_available`=@is_available where `id` = {edit.Id}");
-                mc.Parameters.Add(new MySqlParameter("title", edit.Title));
-                mc.Parameters.Add(new MySqlParameter("year_published", edit.YearPublished));
-                mc.Parameters.Add(new MySqlParameter("genre", edit.Genre));
-                mc.Parameters.Add(new MySqlParameter("is_available", edit.IsAvailable));
+                var mc = connection.CreateCommand($"update `player` set `age`=@age, `player_position`=@player_position, `surname`=@surname, `name`=@name, `patronymic`=@patronymic where `id` = {edit.Id}");
+                mc.Parameters.Add(new MySqlParameter("age", edit.Age));
+                mc.Parameters.Add(new MySqlParameter("player_position", edit.PlayerPosition));
+                mc.Parameters.Add(new MySqlParameter("surname", edit.Surname));
+                mc.Parameters.Add(new MySqlParameter("name", edit.Name));
+                mc.Parameters.Add(new MySqlParameter("patronymic", edit.Patronymic));
 
                 try
                 {
@@ -154,7 +174,7 @@ namespace Match_Analysis.Model
         }
 
 
-        internal bool Remove(Book remove)
+        internal bool Remove(Player remove)
         {
             bool result = false;
             if (connection == null)
@@ -162,7 +182,7 @@ namespace Match_Analysis.Model
 
             if (connection.OpenConnection())
             {
-                var mc = connection.CreateCommand($"delete from `books` where `id` = {remove.Id}");
+                var mc = connection.CreateCommand($"delete from `player` where `id` = {remove.Id}");
                 try
                 {
                     mc.ExecuteNonQuery();
@@ -177,11 +197,11 @@ namespace Match_Analysis.Model
             return result;
         }
 
-        static BookDB db;
-        public static BookDB GetDb()
+        static PlayerDB db;
+        public static PlayerDB GetDb()
         {
             if (db == null)
-                db = new BookDB(DbConnection.GetDbConnection());
+                db = new PlayerDB(DbConnection.GetDbConnection());
             return db;
         }
 

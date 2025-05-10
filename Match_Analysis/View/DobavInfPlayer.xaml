@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Match_Analysis.View"
         mc:Ignorable="d"
         Title="DobavInfPlayer" Height="200" Width="350">
     <Grid>
@@ -23,7 +22,7 @@
         <ComboBox Text="Кто забил" Grid.Row="1" Width="300" Height="20" VerticalAlignment="Bottom"/>
         <Label  Content="Кто отдал голевой пас" Grid.Row="2" Margin="21,0,0,0"/>
         <ComboBox Grid.Row="2" Width="300" Height="20" VerticalAlignment="Bottom"/>
-        <Button Grid.Row="3" Width="300" Height="20" Content="Применить изменения"/>
+        <Button Grid.Row="3" Width="300" Height="20" Content="Применить изменения" Command="{Binding AddPlayer}"/>
 
     </Grid>
 </Window>

@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Match_Analysis.VM;
 
 namespace Match_Analysis.View
 {
@@ -16,6 +17,7 @@ namespace Match_Analysis.View
         public MainWindow()
         {
             InitializeComponent();
+
         }
     }
 }

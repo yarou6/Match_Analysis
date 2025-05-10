@@ -9,7 +9,7 @@ namespace Match_Analysis.Model
     public class Player
     {
 
-        public int Id { get; set; }
+        public int Id { get; set; } 
         public int Age { get; set; }
         public string PlayerPosition { get; set; }
         public string Surname { get; set; }
@@ -19,7 +19,7 @@ namespace Match_Analysis.Model
         public int TeamId { get; set; }
         public Team Team { get; set; }
 
-        public string FIO => Surname + " " + Name + " " + Patronymic;
+        public string FIO => Surname + " " + Name[0] + "." + " " + Patronymic[0] + ".";
 
     }
 }

@@ -22,6 +22,9 @@ namespace Match_Analysis.View
         public EditMatch()
         {
             InitializeComponent();
+
+
+
         }
     }
 }
