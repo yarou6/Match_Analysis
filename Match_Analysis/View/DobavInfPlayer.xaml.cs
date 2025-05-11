@@ -25,7 +25,7 @@ namespace Match_Analysis.View
         {
             InitializeComponent();
 
-
+            ((AddInfPlayer)this.DataContext).SetClose(Close);
         }
     }
 }

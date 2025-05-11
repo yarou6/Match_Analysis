@@ -4,8 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Match_Analysis.View"
+        xmlns:mvvm="clr-namespace:Match_Analysis.VM"
+        DataContext="{DynamicResource vm}"
         mc:Ignorable="d"
-        Title="EditMatch" Height="380" Width="350">
+        Title="EditMatch" Height="390" Width="350">
+    <Window.Resources>
+        <mvvm:AddEditMatch x:Key="vm"/>
+    </Window.Resources>
     <Grid>
 
         <Grid.RowDefinitions>
@@ -22,29 +27,32 @@
         </Grid.RowDefinitions>
        
         <StackPanel Grid.RowSpan="8" >
-            <StackPanel DataContext="{Binding}">
+            <StackPanel >
 
-                <DatePicker Grid.Row="0" Width="300" Height="25" Margin="0,20,0,0"/>
+                <Label Content="Дата Матча" Grid.Row="1" Margin="14,0,0,0" />
+                <DatePicker Grid.Row="0" Width="300" Height="25" Margin="0,0,0,0"  SelectedDate="{Binding Date, UpdateSourceTrigger=PropertyChanged}" />
             
-                <Label Content="Первая команда" Grid.Row="1" Margin="20,0,0,0"/>
+                <Label Content="Первая команда" Grid.Row="1" Margin="14,0,0,0" />
+
+                <ComboBox Grid.Row="1" Width="300" Height="20" VerticalAlignment="Bottom" SelectedItem="{Binding NewMatch.Team}" ItemsSource="{Binding Teams}" DisplayMemberPath="Title"/>
             
-                <ComboBox Grid.Row="1" Width="300" Height="20" VerticalAlignment="Bottom"/>
-            
-                <Label Content="Вторая команда команда" Grid.Row="2" Margin="20,0,0,0"/>
-            
-                <ComboBox Grid.Row="2" Width="300" Height="20" VerticalAlignment="Bottom" />
+                <Label Content="Вторая команда команда" Grid.Row="2" Margin="14,0,0,0" />
 
-                <TextBox Text="Счет первой команды" Grid.Row="3" Width="300" Height="20" HorizontalAlignment="Center" Margin="0,20,0,0" />
+                <ComboBox Grid.Row="2" Width="300" Height="20" VerticalAlignment="Bottom" SelectedItem="{Binding NewMatch.Team}" ItemsSource="{Binding Teams}" DisplayMemberPath="Title"/>
 
-                <TextBox Text="Счет второй команды" Grid.Row="4" Width="300" Height="20" HorizontalAlignment="Center" Margin="0,20,0,0"/>
-
-                <Button Grid.Row="5" Width="300" Height="20" Content="Добавить информацию о игроках первой команды" Margin="0,20,0,0"/>
-
-                <Button Grid.Row="6" Width="300" Height="20" Content="Добавить информацию о игроках второй команды" Margin="0,20,0,0"/>
+                <Label Content="Счет первой команда" Grid.Row="2" Margin="14,0,0,0"/>
+                <TextBox Text="{Binding TeamScore1, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Width="300" Height="20" HorizontalAlignment="Center" Margin="0,0,0,0" DataContext="{Binding NewMatch}"/>
+                    
+                <Label Content="Счет втоой команда" Grid.Row="2" Margin="14,0,0,0"/>
+                <TextBox Text="{Binding TeamScore2, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4" Width="300" Height="20" HorizontalAlignment="Center" Margin="0,0,0,0" DataContext="{Binding NewMatch}"/>
         
             </StackPanel>
 
-            <Button Grid.Row="7" Width="300" Height="20" Content="Применить изменения" Command="{Binding AddPlayer}" Margin="0,20,0,0"/>
+            <Button Grid.Row="5" Width="300" Height="20" Content="Добавить информацию о игроках первой команды" Margin="0,15,0,0" Command="{Binding AddInf1}"/>
+                
+            <Button Grid.Row="6" Width="300" Height="20" Content="Добавить информацию о игроках второй команды" Margin="0,15,0,0" Command="{Binding AddInf2}"/>
+           
+            <Button Grid.Row="7" Width="300" Height="20" Content="Применить изменения" Command="{Binding AddMatch}" Margin="0,15,0,0"/>
            
         </StackPanel>
     </Grid>

@@ -4,8 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Match_Analysis.View" 
+        xmlns:mvvm="clr-namespace:Match_Analysis.VM"
+        DataContext="{DynamicResource vm}"
         mc:Ignorable="d"
-        Title="MatchHistory" Height="350" Width="500">
+        Title="MatchHistory" Height="350" Width="600">
+    <Window.Resources>
+        <mvvm:ProsmotrMatchHistori x:Key="vm"/>
+    </Window.Resources>
     <Grid>
 
         <Grid.RowDefinitions>
@@ -15,24 +20,26 @@
 
         </Grid.RowDefinitions>
 
-        <ListView  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Player}" SelectedItem="{Binding SelectedPlayer}">
+        <ListView  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Matchs}" SelectedItem="{Binding SelectedMatch}">
             <ListView.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Лист Книг" />
+                    <MenuItem Header="Изменить матч" />
+                    <MenuItem Header="Удалить матч" />
                 </ContextMenu>
             </ListView.ContextMenu>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Первая команда" DisplayMemberBinding="{Binding FirstName}"/>
+                    <GridViewColumn Header="Первая команда" DisplayMemberBinding="{Binding TeamId1}"/>
                     <GridViewColumn Header="Счет первой команды" DisplayMemberBinding="{Binding FirstName}"/>
                     <GridViewColumn Header="Счет второй команды" DisplayMemberBinding="{Binding FirstName}"/>
-                    <GridViewColumn Header="Вторая команда" DisplayMemberBinding="{Binding FirstName}"/>
+                    <GridViewColumn Header="Вторая команда" DisplayMemberBinding="{Binding TeamId2}"/>
+                    <GridViewColumn Header="Дата" DisplayMemberBinding="{Binding Date}"/>
                 </GridView>
             </ListView.View>
         </ListView>
 
 
-        <Button Width="100" HorizontalAlignment="Right" />
+        <Button Width="100" HorizontalAlignment="Right" Command="{Binding Vozvrat}"/>
 
     </Grid>
 </Window>

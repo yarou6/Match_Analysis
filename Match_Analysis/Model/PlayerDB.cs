@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using MySqlConnector;
 using System.Windows;
+using Match_Analysis.VM;
+using System.Windows.Controls;
 
 namespace Match_Analysis.Model
 {
@@ -69,7 +71,7 @@ namespace Match_Analysis.Model
 
             if (connection.OpenConnection())
             {
-                var command = connection.CreateCommand("SELECT b.id, b.team_id, b.name, b.player_position, b.age, b.surname, b.patronymic, a.title, a.coach, a.city FROM player b JOIN team a ON b.team_id = a.id ");
+                var command = connection.CreateCommand("SELECT b.id, b.team_id, b.name, b.player_position, b.age, b.surname, b.patronymic, t.title, t.coach, t.city FROM player b JOIN team t ON b.team_id = t.id ");
                 try
                 {
                     // выполнение запроса, который возвращает результат-таблицу
@@ -104,26 +106,14 @@ namespace Match_Analysis.Model
                         string title = string.Empty;
                         if (!dr.IsDBNull(7))
                             title = dr.GetString("title");
+
                         string coach = string.Empty;
                         if (!dr.IsDBNull(8))
                             coach = dr.GetString("coach");
+
                         string city = string.Empty;
                         if (!dr.IsDBNull(9))
                             city = dr.GetString("city");
-
-
-                        Player player = new Player
-                        {
-                            Id = id,
-                            TeamId = team_id,
-                            Age = age,
-                            PlayerPosition = player_position,
-                            Surname = surname,
-                            Name = name,
-                            Patronymic = patronymic,
-                            
-                        };
-
 
                         Team team = new Team
                         {
@@ -132,6 +122,22 @@ namespace Match_Analysis.Model
                             Coach = coach,
                             City = city,
                         };
+                        
+                        
+                        players.Add(new Player
+                        {
+                            Id = id,
+                            TeamId = team_id,
+                            Age = age,
+                            PlayerPosition = player_position,
+                            Surname = surname,
+                            Name = name,
+                            Patronymic = patronymic,
+                            Team = team,
+                        });
+
+
+                        
 
                     }
                 }
@@ -152,13 +158,13 @@ namespace Match_Analysis.Model
 
             if (connection.OpenConnection())
             {
-                var mc = connection.CreateCommand($"update `player` set `age`=@age, `player_position`=@player_position, `surname`=@surname, `name`=@name, `patronymic`=@patronymic where `id` = {edit.Id}");
+                var mc = connection.CreateCommand($"update `player` set `age`=@age, `player_position`=@player_position, `surname`=@surname, `name`=@name, `patronymic`=@patronymic, `team_id`=@team_id where `id` = {edit.Id}");
                 mc.Parameters.Add(new MySqlParameter("age", edit.Age));
                 mc.Parameters.Add(new MySqlParameter("player_position", edit.PlayerPosition));
                 mc.Parameters.Add(new MySqlParameter("surname", edit.Surname));
                 mc.Parameters.Add(new MySqlParameter("name", edit.Name));
                 mc.Parameters.Add(new MySqlParameter("patronymic", edit.Patronymic));
-
+                mc.Parameters.Add(new MySqlParameter("team_id", edit.TeamId));
                 try
                 {
                     mc.ExecuteNonQuery();

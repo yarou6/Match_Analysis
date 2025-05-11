@@ -61,6 +61,28 @@ namespace Match_Analysis.VM
         }
 
 
+        private Match selectedMatch;
+        private ObservableCollection<Match> matchs = new();
+        public ObservableCollection<Match> Matchs
+        {
+            get => matchs;
+            set
+            {
+                matchs = value;
+                Signal();
+            }
+        }
+
+        public Match SelectedMatch
+        {
+            get => selectedMatch;
+            set
+            {
+                selectedMatch = value;
+                Signal();
+            }
+        }
+
 
 
         public CommandMvvm AddTeam { get; set; }
@@ -83,14 +105,7 @@ namespace Match_Analysis.VM
         public MainVM()
         {
 
-
-
-
             SelectAll();
-
-
-
-
 
             AddTeam = new CommandMvvm(() =>
             {
@@ -108,11 +123,11 @@ namespace Match_Analysis.VM
 
             }, () => SelectedTeam != null);
 
-            RemovePlayer = new CommandMvvm(() =>
+            RemoveTeam = new CommandMvvm(() =>
             {
-                var playervozvrat = MessageBox.Show("Вы уверены что хотите удалить игрока?", "Подтверждение", MessageBoxButton.YesNo);
+                var teamvozvrta = MessageBox.Show("Вы уверены что хотите удалить игрока?", "Подтверждение", MessageBoxButton.YesNo);
 
-                if (playervozvrat == MessageBoxResult.Yes)
+                if (teamvozvrta == MessageBoxResult.Yes)
                 {
                     TeamDB.GetDb().Remove(SelectedTeam);
                 }
@@ -141,16 +156,16 @@ namespace Match_Analysis.VM
 
             }, () => SelectedPlayer != null);
 
-            RemoveTeam = new CommandMvvm(() =>
+            RemovePlayer = new CommandMvvm(() =>
             {
-                var teamvozvrat = MessageBox.Show("Вы уверены что хотите удалить команду?", "Подтверждение", MessageBoxButton.YesNo);
+                var playervozvrat = MessageBox.Show("Вы уверены что хотите удалить команду?", "Подтверждение", MessageBoxButton.YesNo);
 
-                if (teamvozvrat == MessageBoxResult.Yes)
+                if (playervozvrat == MessageBoxResult.Yes)
                 {
-                    TeamDB.GetDb().Remove(SelectedTeam);
+                    PlayerDB.GetDb().Remove(SelectedPlayer);
                 }
                 SelectAll();
-            }, () => SelectedTeam != null);
+            }, () => SelectedPlayer != null);
 
 
 
@@ -161,8 +176,24 @@ namespace Match_Analysis.VM
             AddMatch = new CommandMvvm(() =>
             {
                 new EditMatch().ShowDialog();
+
                 SelectAll();
+
             }, () => true);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             HistMatch = new CommandMvvm(() =>
             {

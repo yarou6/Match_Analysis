@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Match_Analysis.Model
 {
-    public class PlayerStatictics
+    public class PlayerStatistics
     {
         public int Id { get; set; }
         public int MatchId { get; set; }

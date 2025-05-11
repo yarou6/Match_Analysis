@@ -4,8 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Match_Analysis.View"
+        xmlns:mvvm="clr-namespace:Match_Analysis.VM"
+        DataContext="{DynamicResource vm}"
         mc:Ignorable="d"
         Title="TournamentStatistics" Height="450" Width="800">
+    <Window.Resources>
+        <mvvm:ProsmotrTournStat x:Key="vm"/>
+    </Window.Resources>
     <Grid>
 
 
@@ -33,7 +38,7 @@
         </ListView>
 
 
-        <Button Width="100" HorizontalAlignment="Right" />
+        <Button Width="100" HorizontalAlignment="Right" Command="{Binding Vozvrat}"/>
 
 
 

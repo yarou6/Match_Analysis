@@ -4,8 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Match_Analysis.View"
+        xmlns:mvvm="clr-namespace:Match_Analysis.VM"
+        DataContext="{DynamicResource vm}"
         mc:Ignorable="d"
         Title="PlayerHistory" Height="450" Width="800">
+    <Window.Resources>
+        <mvvm:ProsmotrPlayerHistory x:Key="vm"/>
+    </Window.Resources>
     <Grid>
 
         <Grid.RowDefinitions>
@@ -15,7 +20,7 @@
 
         </Grid.RowDefinitions>
 
-        <ListView  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Player}" SelectedItem="{Binding SelectedPlayer}">
+        <ListView  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Players}" SelectedItem="{Binding SelectedPlayer}">
             <ListView.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Лист Книг" />
@@ -32,7 +37,7 @@
         </ListView>
 
 
-        <Button Width="100" HorizontalAlignment="Right" Grid.Row="0"/>
+        <Button Width="100" HorizontalAlignment="Right" Grid.Row="0" Command="{Binding Vozvrat}"/>
         <ComboBox Width="300" HorizontalAlignment="Left" Grid.Row="0"/>
 
     </Grid>

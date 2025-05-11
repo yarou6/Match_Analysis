@@ -19,7 +19,21 @@ namespace Match_Analysis.Model
         public int TeamId { get; set; }
         public Team Team { get; set; }
 
-        public string FIO => Surname + " " + Name[0] + "." + " " + Patronymic[0] + ".";
+
+        public string FIO
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(Patronymic))
+                {
+                    return Surname + " " + Name[0] + ".";
+                }
+                else
+                {
+                    return Surname + " " + Name[0] + "." + " " + Patronymic[0] + ".";
+                }
+            }
+        }
 
     }
 }

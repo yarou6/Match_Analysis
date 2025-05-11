@@ -46,15 +46,15 @@
             <ListView.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Добавить команду" Command="{Binding AddTeam}"/>
-                    <MenuItem Header="Изменить команду" Command="{Binding EditTeam}"/>
+                    <MenuItem Header="Изменить команду" Command="{Binding EditTeam}" />
                     <MenuItem Header="Удалить команду" Command="{Binding RemoveTeam}"/>
                 </ContextMenu>
             </ListView.ContextMenu>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Название команды" DisplayMemberBinding="{Binding Title}"/>
-                    <GridViewColumn Header="Тренер" DisplayMemberBinding="{Binding Coach}"/>
-                    <GridViewColumn Header="Город" DisplayMemberBinding="{Binding City}"/>
+                    <GridViewColumn Header="Команда" DisplayMemberBinding="{Binding Title}" Width="Auto"/>
+                    <GridViewColumn Header="Тренер" DisplayMemberBinding="{Binding Coach}" Width="Auto"/>
+                    <GridViewColumn Header="Город" DisplayMemberBinding="{Binding City}" Width="Auto"/>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -69,9 +69,10 @@
             </ListView.ContextMenu>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="ФИО" DisplayMemberBinding="{Binding FIO}"/>
-                    <GridViewColumn Header="Возвраст" DisplayMemberBinding="{Binding Age}"/>
-                    <GridViewColumn Header="Позиция" DisplayMemberBinding="{Binding PlayerPosition}"/>
+                    <GridViewColumn Header="ФИО" DisplayMemberBinding="{Binding FIO}" Width="Auto"/>
+                    <GridViewColumn Header="Возвраст" DisplayMemberBinding="{Binding Age}" Width="Auto"/>
+                    <GridViewColumn Header="Позиция" DisplayMemberBinding="{Binding PlayerPosition}" Width="Auto"/>
+                    <GridViewColumn Header="Команда" DisplayMemberBinding="{Binding Team.Title}" Width="Auto"/>
                 </GridView>
             </ListView.View>
         </ListView>

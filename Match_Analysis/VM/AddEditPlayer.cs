@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Match_Analysis.Model;
 using System.Windows;
+using System.Collections.ObjectModel;
 
 namespace Match_Analysis.VM
 {
@@ -22,13 +23,41 @@ namespace Match_Analysis.VM
                 Signal();
             }
         }
+
+        private string positional;
+
+        public string Positional
+        {
+            get => positional;
+            set
+            {
+                positional = value;
+                Signal();
+            }
+        }
+
+
+        public List<Team> Teams
+        {
+            get => teams;
+            set
+            {
+                teams = value;
+                Signal();
+            }
+        }
+
+
+
+
         public CommandMvvm AddPlayer { get; set; }
         public AddEditPlayer()
         {
-
             AddPlayer = new CommandMvvm(() =>
             {
 
+                NewPlayer.TeamId = NewPlayer.Team.Id;
+                NewPlayer.PlayerPosition = Positional;
                 if (newPlayer.Id == 0)
                 {
                     PlayerDB.GetDb().Insert(NewPlayer);
@@ -40,9 +69,12 @@ namespace Match_Analysis.VM
                 
 
         }, () => 
+                NewPlayer != null &&
+                NewPlayer.Team != null &&
                 !string.IsNullOrEmpty(newPlayer.Surname) &&
                 !string.IsNullOrEmpty(newPlayer.Name) &&
-                !string.IsNullOrEmpty(newPlayer.PlayerPosition) &&
+                //!string.IsNullOrEmpty(newPlayer.PlayerPosition) &&
+                Positional != null &&
                 newPlayer.Age >= 16
                 );
 
@@ -50,13 +82,24 @@ namespace Match_Analysis.VM
         public void SetPlayer(Player selectedPlayer)
         {
             NewPlayer = selectedPlayer;
+            SelectedTeam();
         }
 
         Action close;
+        private List<Team> teams = new();
 
         internal void SetClose(Action close)
         {
             this.close = close;
+        }
+
+        public void SelectedTeam()
+        {
+            Teams = TeamDB.GetDb().SelectAll();
+            if (NewPlayer.Team != null)
+            {
+                NewPlayer.Team = Teams.FirstOrDefault(s => s.Id == NewPlayer.TeamId);
+            }
         }
     }
 }
