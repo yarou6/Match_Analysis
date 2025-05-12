@@ -19,7 +19,7 @@ namespace Match_Analysis.Model
             MySqlConnectionStringBuilder sb = new MySqlConnectionStringBuilder();
             sb.UserID = "student";
             sb.Password = "student";
-            sb.Server = "95.154.107.102";
+            sb.Server = "192.168.200.13";
             sb.Database = "1125_Marienko";
             sb.CharacterSet = "utf8mb4";
 

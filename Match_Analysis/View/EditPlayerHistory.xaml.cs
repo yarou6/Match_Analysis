@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Match_Analysis.VM;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,20 +12,20 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Match_Analysis.VM;
 
 namespace Match_Analysis.View
 {
     /// <summary>
-    /// Логика взаимодействия для MatchHistory.xaml
+    /// Логика взаимодействия для EditPlayerHistory.xaml
     /// </summary>
-    public partial class MatchHistory : Window
+    public partial class EditPlayerHistory : Window
     {
-        public MatchHistory()
+        public EditPlayerHistory()
         {
             InitializeComponent();
 
-            ((ProsmotrMatchHistory)this.DataContext).SetClose(Close);
+
+            ((AddEditPlayerHistory)this.DataContext).SetClose(Close);
         }
     }
 }

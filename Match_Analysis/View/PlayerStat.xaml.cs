@@ -18,13 +18,13 @@ namespace Match_Analysis.View
     /// <summary>
     /// Логика взаимодействия для PlayerHistory.xaml
     /// </summary>
-    public partial class PlayerHistorys : Window
+    public partial class PlayerStat : Window
     {
-        public PlayerHistorys()
+        public PlayerStat()
         {
             InitializeComponent();
 
-            ((ProsmotrPlayerHistory)this.DataContext).SetClose(Close);
+            ((ProsmotrPlayerStat)this.DataContext).SetClose(Close);
         }
     }
 }

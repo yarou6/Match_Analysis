@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Match_Analysis.Model;
 using System.Windows;
 using System.Collections.ObjectModel;
+using Match_Analysis.View;
 
 namespace Match_Analysis.VM
 {
@@ -49,7 +50,7 @@ namespace Match_Analysis.VM
 
 
 
-
+        public CommandMvvm AddTeam { get; set; }
         public CommandMvvm AddPlayer { get; set; }
         public AddEditPlayer()
         {
@@ -77,6 +78,22 @@ namespace Match_Analysis.VM
                 Positional != null &&
                 newPlayer.Age >= 16
                 );
+
+
+            AddTeam = new CommandMvvm(() =>
+            {
+                new EditPlayerHistory(/*NewPlayer*/).ShowDialog();
+
+            }, () => true );
+
+
+
+
+
+
+
+
+
 
         }
         public void SetPlayer(Player selectedPlayer)

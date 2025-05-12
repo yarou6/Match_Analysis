@@ -203,7 +203,7 @@ namespace Match_Analysis.VM
 
             HistPlayer = new CommandMvvm(() =>
             {
-                new PlayerHistorys().ShowDialog();
+                new PlayerStat().ShowDialog();
                 SelectAll();
             }, () => true);
 

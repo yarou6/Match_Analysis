@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Match_Analysis.VM
 {
-    internal class ProsmotrMatchHistori: BaseVM
+    internal class ProsmotrPlayerStat : BaseVM
     {
 
         public CommandMvvm Vozvrat { get; set; }
-        public ProsmotrMatchHistori()
+        public ProsmotrPlayerStat()
         {
 
             Vozvrat = new CommandMvvm(() =>
@@ -28,9 +28,5 @@ namespace Match_Analysis.VM
         {
             this.close = close;
         }
-
-
-
-
     }
 }

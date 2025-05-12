@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Match_Analysis.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace Match_Analysis.VM
 {
-    internal class ProsmotrPlayerHistory: BaseVM
+    internal class ProsmotrMatchHistory : BaseVM
     {
 
+        
+
         public CommandMvvm Vozvrat { get; set; }
-        public ProsmotrPlayerHistory()
+        public ProsmotrMatchHistory()
         {
 
             Vozvrat = new CommandMvvm(() =>
@@ -28,5 +31,8 @@ namespace Match_Analysis.VM
         {
             this.close = close;
         }
+
+
+
     }
 }
