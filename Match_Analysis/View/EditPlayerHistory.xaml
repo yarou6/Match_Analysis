@@ -7,12 +7,17 @@
         xmlns:mvvm="clr-namespace:Match_Analysis.VM"
         DataContext="{DynamicResource vm}"
         mc:Ignorable="d"
-        Title="EditPlayerHistory" Height="225" Width="350">
+        Title="EditPlayerHistory" Height="265" Width="700">
     <Window.Resources>
         <mvvm:AddEditPlayerHistory x:Key="vm"/>
     </Window.Resources>
 
     <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="50*"/>
+        </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
 
@@ -20,27 +25,41 @@
             <RowDefinition Height="20*"/>
             <RowDefinition Height="20*"/>
             <RowDefinition Height="20*"/>
-
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
 
 
-        <StackPanel Grid.RowSpan="4" >
-            <StackPanel DataContext="{Binding NewTeam}">
+        <StackPanel Grid.RowSpan="4" Grid.Column="0">
 
-                <TextBlock Text="В какой команде" Grid.Row="4" Margin="17,10,0,0" />
-                <ComboBox  Grid.Row="4" Width="300" Height="20" VerticalAlignment="Bottom" SelectedItem="{Binding SelectedTeam}" ItemsSource="{Binding Teams}" DisplayMemberPath="Title"/>
-
-
-                <TextBlock Text="Вход в команду" Grid.Row="4" Margin="17,10,0,0" />
-                <DatePicker Grid.Row="5" Width="300" Height="25" />
+            
+            <TextBlock Text="В какой команде" Grid.Row="4" Margin="17,10,0,0" />
+            <ComboBox  Grid.Row="4" Width="300" Height="20" VerticalAlignment="Bottom" SelectedItem="{Binding SelectedTeam}" ItemsSource="{Binding Teams}" DisplayMemberPath="Title"/>
 
 
-                <TextBlock Text="Выход из команды" Grid.Row="4" Margin="17,10,0,0"/>
-                <DatePicker Grid.Row="6" Width="300" Height="25"/>
+            
+            <TextBlock Text="Вход в команду" Grid.Row="4" Margin="17,10,0,0" />
+            <DatePicker Grid.Row="5" Width="300" Height="25" SelectedDate="{Binding EntryDate, UpdateSourceTrigger=PropertyChanged}" DataContext="{Binding NewPlayerHistory}"/>
 
-            </StackPanel>
-            <Button Grid.Row="3" Width="300" Height="20" Content="Применить изменения" Margin="0,10,0,0" Command="{Binding AddTeam}"/>
-        </StackPanel>
+
+            
+            <TextBlock Text="Выход из команды" Grid.Row="4" Margin="17,10,0,0"/>
+            <DatePicker Grid.Row="6" Width="300" Height="25" SelectedDate="{Binding ReleaseDate, UpdateSourceTrigger=PropertyChanged}" DataContext="{Binding NewPlayerHistory}"/>
+
+         </StackPanel>
+        
+             <Button Grid.Row="4" Width="300" Height="20" Content="Применить изменения" VerticalAlignment="Center" Margin="0,10,0,0" Command="{Binding AddTeam}"/>
+             <Button Grid.Row="5" Width="300" Height="20" Content="Выход" Margin="0,0,0,0"  VerticalAlignment="Center" Command="{Binding Exit}"/>
+
+        <ListView  Grid.Column="1" Grid.Row="0" Grid.RowSpan="8" ItemsSource="{Binding PlayerHistories}" SelectedItem="{Binding SelectedPlayerHistory}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Команда" DisplayMemberBinding="{Binding Team.Title}" Width="Auto"/>
+                    <GridViewColumn Header="Вход в команду" DisplayMemberBinding="{Binding EntryDate}" Width="Auto"/>
+                    <GridViewColumn Header="Выход из команды" DisplayMemberBinding="{Binding ReleaseDate}" Width="Auto"/>
+                </GridView> 
+            </ListView.View>
+        </ListView>
 
     </Grid>
 </Window>

@@ -85,6 +85,31 @@ namespace Match_Analysis.VM
 
 
 
+
+        
+        private ObservableCollection<PlayerHistory> playerHistories = new();
+        public ObservableCollection<PlayerHistory> PlayerHistories
+        {
+            get => playerHistories;
+            set
+            {
+                playerHistories = value;
+                Signal();
+            }
+        }
+        private PlayerHistory selectedPlayerHistory;
+        public PlayerHistory SelectedPlayerHistory
+        {
+            get => selectedPlayerHistory;
+            set
+            {
+                selectedPlayerHistory = value;
+                Signal();
+            }
+        }
+
+
+
         public CommandMvvm AddTeam { get; set; }
         public CommandMvvm EditTeam { get; set; }
         public CommandMvvm RemoveTeam { get; set; }

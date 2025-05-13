@@ -67,7 +67,7 @@ namespace Match_Analysis.Model
 
             if (connection.OpenConnection())
             {
-                var command = connection.CreateCommand("select `id`, `entry_date`, `release_date`, `player_id`, `team_id` from `player_history` ");
+                var command = connection.CreateCommand("SELECT ps.id, ps.entry_date, ps.release_date, ps.playr_id, ps.team_id, c.name, c.player_position, c.age, c.surname, c.patronymic, t.title, t.coach, t.city FROM player_history ps JOIN player c ON ps.playr_id = c.`id` JOIN team p ON ps.team_id = p.`id` ");
                 try
                 {
                     // выполнение запроса, который возвращает результат-таблицу
@@ -89,6 +89,58 @@ namespace Match_Analysis.Model
                         if (!dr.IsDBNull(4))
                             release_date = dr.GetDateTime("release_date");
 
+                        int age = 0;
+                        if (!dr.IsDBNull(5))
+                            age = dr.GetInt32("age");
+
+                        string player_position = string.Empty;
+                        if (!dr.IsDBNull(6))
+                            player_position = dr.GetString("player_position");
+
+                        string surname = string.Empty;
+                        if (!dr.IsDBNull(7))
+                            surname = dr.GetString("surname");
+
+                        string name = string.Empty;
+                        if (!dr.IsDBNull(8))
+                            name = dr.GetString("name");
+
+                        string patronymic = string.Empty;
+                        if (!dr.IsDBNull(9))
+                            patronymic = dr.GetString("patronymic");
+
+                        string title = string.Empty;
+                        if (!dr.IsDBNull(10))
+                            title = dr.GetString("title");
+
+                        string coach = string.Empty;
+                        if (!dr.IsDBNull(11))
+                            coach = dr.GetString("coach");
+
+                        string city = string.Empty;
+                        if (!dr.IsDBNull(12))
+                            city = dr.GetString("city");
+
+                        Team team = new Team
+                        {
+                            Id = team_id,
+                            Title = title,
+                            Coach = coach,
+                            City = city,
+                        };
+
+
+                        Player player = new Player
+                        {
+                            Id = player_id,
+                            Age = age,
+                            PlayerPosition = player_position,
+                            Surname = surname,
+                            Name = name,
+                            Patronymic = patronymic,
+                            Team = team,
+                        };
+
                         playerHistories.Add(new PlayerHistory
                         {
                             Id = id,
@@ -96,6 +148,8 @@ namespace Match_Analysis.Model
                             TeamId = team_id,
                             EntryDate = entry_date,
                             ReleaseDate = release_date,
+                            Team = team,
+                            Player = player,
                         });
                     }
                 }

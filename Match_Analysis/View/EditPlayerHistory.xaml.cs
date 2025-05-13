@@ -1,4 +1,5 @@
-﻿using Match_Analysis.VM;
+﻿using Match_Analysis.Model;
+using Match_Analysis.VM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +21,12 @@ namespace Match_Analysis.View
     /// </summary>
     public partial class EditPlayerHistory : Window
     {
-        public EditPlayerHistory()
+        public EditPlayerHistory(PlayerHistory selectedPlayerHistory)
         {
             InitializeComponent();
 
 
+            ((AddEditPlayerHistory)this.DataContext).SetPlayerHistory(selectedPlayerHistory);
             ((AddEditPlayerHistory)this.DataContext).SetClose(Close);
         }
     }
