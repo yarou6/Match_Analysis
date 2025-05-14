@@ -10,7 +10,7 @@ namespace Match_Analysis.Model
     {
         public int Id { get; set; }
         public DateTime EntryDate { get; set; }
-        public DateTime ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
         public int PlayerId { get; set; }
         public Player Player { get; set; }
         public Team Team { get; set; }

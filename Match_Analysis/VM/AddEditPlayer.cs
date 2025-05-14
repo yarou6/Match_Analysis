@@ -48,6 +48,7 @@ namespace Match_Analysis.VM
             }
         }
 
+
         private PlayerHistory selectedPlayerHistory;
         public PlayerHistory SelectedPlayerHistory
         {
@@ -69,7 +70,7 @@ namespace Match_Analysis.VM
 
                 //NewPlayer.TeamId = NewPlayer.Team.Id;
                 NewPlayer.PlayerPosition = Positional;
-                if (newPlayer.Id == 0)
+                if (NewPlayer.Id == 0)
                 {
                     PlayerDB.GetDb().Insert(NewPlayer);
                     close?.Invoke();
@@ -94,16 +95,18 @@ namespace Match_Analysis.VM
             AddTeam = new CommandMvvm(() =>
             {
                 NewPlayer.PlayerPosition = Positional;
-                if (newPlayer.Id == 0)
+                
+                if (NewPlayer.Id == 0)
                 {
-                    PlayerDB.GetDb().Insert(NewPlayer);
-                    new EditPlayerHistory(new PlayerHistory()).ShowDialog();
+                    PlayerDB.GetDb().Insert(NewPlayer); 
+                    new EditPlayerHistory(NewPlayer).ShowDialog();
 
                 }
                 else
-                { 
-                     PlayerDB.GetDb().Update(newPlayer);
-                     new EditPlayerHistory(new PlayerHistory()).ShowDialog();
+                {
+                    
+                    PlayerDB.GetDb().Update(NewPlayer);
+                    new EditPlayerHistory(NewPlayer).ShowDialog();
                 }
                 
 
@@ -123,7 +126,6 @@ namespace Match_Analysis.VM
         public void SetPlayer(Player selectedPlayer)
         {
             NewPlayer = selectedPlayer;
-            SelectedTeam();
         }
 
         Action close;
@@ -134,13 +136,6 @@ namespace Match_Analysis.VM
             this.close = close;
         }
 
-        public void SelectedTeam()
-        {
-            Teams = TeamDB.GetDb().SelectAll();
-            if (NewPlayer.Team != null)
-            {
-                NewPlayer.Team = Teams.FirstOrDefault(s => s.Id == NewPlayer.TeamId);
-            }
-        }
+        
     }
 }

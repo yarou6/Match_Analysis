@@ -32,11 +32,11 @@ namespace Match_Analysis.VM
             AddMatch = new CommandMvvm(() =>
             {
 
-                if (newMatch.Id == 0)
+                if (NewMatch.Id == 0)
                 {
                     MatchDB.GetDb().Insert(NewMatch);
                 }
-                else MatchDB.GetDb().Update(newMatch);
+                else MatchDB.GetDb().Update(NewMatch);
                 close?.Invoke();
 
             }, () =>

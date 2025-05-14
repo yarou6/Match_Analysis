@@ -66,7 +66,7 @@ namespace Match_Analysis.Model
 
             if (connection.OpenConnection())
             {
-                var command = connection.CreateCommand("select `id`, `goal`, `assist`, `player_id`, `match_id` from `player_statistics` ");
+                var command = connection.CreateCommand("select `id`, `player_id`, `match_id`, `goal`, `assist` from `player_statistics` ");
                 try
                 {
                     // выполнение запроса, который возвращает результат-таблицу

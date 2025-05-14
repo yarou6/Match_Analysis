@@ -21,12 +21,12 @@ namespace Match_Analysis.View
     /// </summary>
     public partial class EditPlayerHistory : Window
     {
-        public EditPlayerHistory(PlayerHistory selectedPlayerHistory)
+        public EditPlayerHistory(Player editPlayer)
         {
             InitializeComponent();
 
 
-            ((AddEditPlayerHistory)this.DataContext).SetPlayerHistory(selectedPlayerHistory);
+            ((AddEditPlayerHistory)this.DataContext).SetPlayer(editPlayer);
             ((AddEditPlayerHistory)this.DataContext).SetClose(Close);
         }
     }

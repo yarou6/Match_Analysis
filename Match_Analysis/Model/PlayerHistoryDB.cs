@@ -1,6 +1,7 @@
 ﻿using MySqlConnector;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -67,7 +68,7 @@ namespace Match_Analysis.Model
 
             if (connection.OpenConnection())
             {
-                var command = connection.CreateCommand("SELECT ps.id, ps.entry_date, ps.release_date, ps.playr_id, ps.team_id, c.name, c.player_position, c.age, c.surname, c.patronymic, t.title, t.coach, t.city FROM player_history ps JOIN player c ON ps.playr_id = c.`id` JOIN team p ON ps.team_id = p.`id` ");
+                var command = connection.CreateCommand("SELECT ps.id, ps.entry_date, ps.release_date, ps.playr_id, ps.team_id, c.name, c.player_position, c.age, c.surname, c.patronymic, t.title, t.coach, t.city FROM player_history ps JOIN player c ON ps.playr_id = c.`id` JOIN team t ON ps.team_id = t.`id` ");
                 try
                 {
                     // выполнение запроса, который возвращает результат-таблицу
@@ -75,50 +76,50 @@ namespace Match_Analysis.Model
                     // в цикле читаем построчно всю таблицу
                     while (dr.Read())
                     {
-                        int id = dr.GetInt32(0);
+                        int id = dr.GetInt32("ps.id");
 
-                        int player_id = dr.GetInt32(1);
+                        int player_id = dr.GetInt32("ps.playr_id");
 
-                        int team_id = dr.GetInt32(2);
+                        int team_id = dr.GetInt32("ps.team_id");
 
                         DateTime entry_date = new DateTime();
-                        if (!dr.IsDBNull(3))
+                        if (!dr.IsDBNull("entry_date"))
                             entry_date = dr.GetDateTime("entry_date");
 
                         DateTime release_date = new DateTime();
-                        if (!dr.IsDBNull(4))
+                        if (!dr.IsDBNull("release_date"))
                             release_date = dr.GetDateTime("release_date");
 
                         int age = 0;
-                        if (!dr.IsDBNull(5))
+                        if (!dr.IsDBNull("age"))
                             age = dr.GetInt32("age");
 
                         string player_position = string.Empty;
-                        if (!dr.IsDBNull(6))
+                        if (!dr.IsDBNull("player_position"))
                             player_position = dr.GetString("player_position");
 
                         string surname = string.Empty;
-                        if (!dr.IsDBNull(7))
+                        if (!dr.IsDBNull("surname"))
                             surname = dr.GetString("surname");
 
                         string name = string.Empty;
-                        if (!dr.IsDBNull(8))
+                        if (!dr.IsDBNull("name"))
                             name = dr.GetString("name");
 
                         string patronymic = string.Empty;
-                        if (!dr.IsDBNull(9))
+                        if (!dr.IsDBNull("patronymic"))
                             patronymic = dr.GetString("patronymic");
 
                         string title = string.Empty;
-                        if (!dr.IsDBNull(10))
+                        if (!dr.IsDBNull("title"))
                             title = dr.GetString("title");
 
                         string coach = string.Empty;
-                        if (!dr.IsDBNull(11))
+                        if (!dr.IsDBNull("coach"))
                             coach = dr.GetString("coach");
 
                         string city = string.Empty;
-                        if (!dr.IsDBNull(12))
+                        if (!dr.IsDBNull("city"))
                             city = dr.GetString("city");
 
                         Team team = new Team
@@ -161,6 +162,110 @@ namespace Match_Analysis.Model
             connection.CloseConnection();
             return playerHistories;
         }
+
+        internal List<PlayerHistory> SelectPlayer(int playerid)
+        {
+            List<PlayerHistory> playerHistories = new List<PlayerHistory>();
+            if (connection == null)
+                return playerHistories;
+
+            if (connection.OpenConnection())
+            {
+                var command = connection.CreateCommand($"SELECT ps.id, ps.entry_date, ps.release_date, ps.playr_id, ps.team_id, c.name, c.player_position, c.age, c.surname, c.patronymic, t.title, t.coach, t.city FROM player_history ps JOIN player c ON ps.playr_id = c.`id` JOIN team t ON ps.team_id = t.`id` WHERE ps.playr_id = {playerid}");
+                try
+                {
+                    // выполнение запроса, который возвращает результат-таблицу
+                    MySqlDataReader dr = command.ExecuteReader();
+                    // в цикле читаем построчно всю таблицу
+                    while (dr.Read())
+                    {
+                        int id = dr.GetInt32("ps.id");
+
+                        int player_id = dr.GetInt32("ps.playr_id");
+
+                        int team_id = dr.GetInt32("ps.team_id");
+
+                        DateTime entry_date = new DateTime();
+                        if (!dr.IsDBNull("entry_date"))
+                            entry_date = dr.GetDateTime("entry_date");
+
+                        DateTime release_date = new DateTime();
+                        if (!dr.IsDBNull("release_date"))
+                            release_date = dr.GetDateTime("release_date");
+
+                        int age = 0;
+                        if (!dr.IsDBNull("age"))
+                            age = dr.GetInt32("age");
+
+                        string player_position = string.Empty;
+                        if (!dr.IsDBNull("player_position"))
+                            player_position = dr.GetString("player_position");
+
+                        string surname = string.Empty;
+                        if (!dr.IsDBNull("surname"))
+                            surname = dr.GetString("surname");
+
+                        string name = string.Empty;
+                        if (!dr.IsDBNull("name"))
+                            name = dr.GetString("name");
+
+                        string patronymic = string.Empty;
+                        if (!dr.IsDBNull("patronymic"))
+                            patronymic = dr.GetString("patronymic");
+
+                        string title = string.Empty;
+                        if (!dr.IsDBNull("title"))
+                            title = dr.GetString("title");
+
+                        string coach = string.Empty;
+                        if (!dr.IsDBNull("coach"))
+                            coach = dr.GetString("coach");
+
+                        string city = string.Empty;
+                        if (!dr.IsDBNull("city"))
+                            city = dr.GetString("city");
+
+                        Team team = new Team
+                        {
+                            Id = team_id,
+                            Title = title,
+                            Coach = coach,
+                            City = city,
+                        };
+
+
+                        Player player = new Player
+                        {
+                            Id = player_id,
+                            Age = age,
+                            PlayerPosition = player_position,
+                            Surname = surname,
+                            Name = name,
+                            Patronymic = patronymic,
+                            Team = team,
+                        };
+
+                        playerHistories.Add(new PlayerHistory
+                        {
+                            Id = id,
+                            PlayerId = player_id,
+                            TeamId = team_id,
+                            EntryDate = entry_date,
+                            ReleaseDate = release_date,
+                            Team = team,
+                            Player = player,
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            connection.CloseConnection();
+            return playerHistories;
+        }
+
 
         internal bool Update(PlayerHistory edit)
         {

@@ -44,6 +44,30 @@ namespace Match_Analysis.VM
             }
         }
 
+        private Player newPlayer = new();
+
+        public Player NewPlayer
+        {
+            get => newPlayer;
+            set
+            {
+                newPlayer = value;
+                Signal();
+            }
+        }
+
+        private Team selectedTeam;
+
+        public Team SelectedTeam
+        {
+            get => selectedTeam;
+            set
+            {
+                selectedTeam = value;
+                Signal();
+            }
+        }
+
 
         public CommandMvvm AddTeam { get; set; }
 
@@ -51,23 +75,29 @@ namespace Match_Analysis.VM
 
         public AddEditPlayerHistory()
         {
+
+
             AddTeam = new CommandMvvm(() =>
             {
-                PlayerHistoryDB.GetDb().Insert(NewPlayerHistory);
+                if(NewPlayerHistory.Id == 0)
+                {
+                    NewPlayerHistory.TeamId = SelectedTeam.Id;
+                    if (NewPlayerHistory.ReleaseDate == new DateTime())
+                        NewPlayerHistory.ReleaseDate = null;
+                    NewPlayer.TeamId = NewPlayerHistory.TeamId;
+                    NewPlayerHistory.PlayerId = NewPlayer.Id;
+                    PlayerHistoryDB.GetDb().Insert(NewPlayerHistory);
+
+                }else PlayerHistoryDB.GetDb().Update(NewPlayerHistory);
+
                 SelectAll();
 
             }, () => true);
 
+
             Exit = new CommandMvvm(() =>
             {
-
-                if(newPlayerHistory.ReleaseDate == null)
-                {
-                
-                    PlayerHistoryDB.GetDb().Insert(NewPlayerHistory);
-
-                }
-                
+                NewPlayerHistory.ReleaseDate = null;
                 close?.Invoke();
 
             }, () => true);
@@ -76,10 +106,10 @@ namespace Match_Analysis.VM
 
 
 
-        public void SetPlayerHistory(PlayerHistory selectedPlayerHistory)
+        public void SetPlayer(Player editPlayer)
         {
-            NewPlayerHistory = selectedPlayerHistory;
-            SelectedTeam();
+            NewPlayer = editPlayer;
+            SelectAll();
         }
 
         Action close;
@@ -90,18 +120,11 @@ namespace Match_Analysis.VM
             this.close = close;
         }
 
-        public void SelectedTeam()
-        {
-            Teams = TeamDB.GetDb().SelectAll();
-            if (NewPlayerHistory.Team != null)
-            {
-                NewPlayerHistory.Team = Teams.FirstOrDefault(s => s.Id == NewPlayerHistory.TeamId);
-            }
-        }
 
         private void SelectAll()
         {
-            PlayerHistories = new ObservableCollection<PlayerHistory>(PlayerHistoryDB.GetDb().SelectAll());
+            PlayerHistories = new ObservableCollection<PlayerHistory>(PlayerHistoryDB.GetDb().SelectPlayer(NewPlayer.Id));
+            Teams = new List<Team>(TeamDB.GetDb().SelectAll());
         }
     }
 }

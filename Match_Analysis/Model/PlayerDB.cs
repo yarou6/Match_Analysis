@@ -71,7 +71,7 @@ namespace Match_Analysis.Model
 
             if (connection.OpenConnection())
             {
-                var command = connection.CreateCommand("SELECT b.id, b.team_id, b.name, b.player_position, b.age, b.surname, b.patronymic, t.title, t.coach, t.city FROM player b JOIN team t ON b.team_id = t.id ");
+                var command = connection.CreateCommand("SELECT b.id, b.team_id, b.name, b.player_position, b.age, b.surname, b.patronymic, t.title, t.coach, t.city FROM player b JOIN team t ON b.team_id = t.id");
                 try
                 {
                     // выполнение запроса, который возвращает результат-таблицу
