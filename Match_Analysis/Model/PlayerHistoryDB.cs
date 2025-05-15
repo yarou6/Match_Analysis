@@ -68,7 +68,7 @@ namespace Match_Analysis.Model
 
             if (connection.OpenConnection())
             {
-                var command = connection.CreateCommand("SELECT ps.id, ps.entry_date, ps.release_date, ps.playr_id, ps.team_id, c.name, c.player_position, c.age, c.surname, c.patronymic, t.title, t.coach, t.city FROM player_history ps JOIN player c ON ps.playr_id = c.`id` JOIN team t ON ps.team_id = t.`id` ");
+                var command = connection.CreateCommand("SELECT ps.id, ps.player_id, ps.team_id, ps.entry_date, ps.release_date,  c.name, c.player_position, c.age, c.surname, c.patronymic, t.title, t.coach, t.city FROM player_history ps JOIN player c ON ps.player_id = c.`id` JOIN team t ON ps.team_id = t.`id` ");
                 try
                 {
                     // выполнение запроса, который возвращает результат-таблицу
@@ -76,11 +76,11 @@ namespace Match_Analysis.Model
                     // в цикле читаем построчно всю таблицу
                     while (dr.Read())
                     {
-                        int id = dr.GetInt32("ps.id");
+                        int id = dr.GetInt32(0);
 
-                        int player_id = dr.GetInt32("ps.playr_id");
+                        int player_id = dr.GetInt32(1);
 
-                        int team_id = dr.GetInt32("ps.team_id");
+                        int team_id = dr.GetInt32(2);
 
                         DateTime entry_date = new DateTime();
                         if (!dr.IsDBNull("entry_date"))
@@ -171,7 +171,7 @@ namespace Match_Analysis.Model
 
             if (connection.OpenConnection())
             {
-                var command = connection.CreateCommand($"SELECT ps.id, ps.entry_date, ps.release_date, ps.playr_id, ps.team_id, c.name, c.player_position, c.age, c.surname, c.patronymic, t.title, t.coach, t.city FROM player_history ps JOIN player c ON ps.playr_id = c.`id` JOIN team t ON ps.team_id = t.`id` WHERE ps.playr_id = {playerid}");
+                var command = connection.CreateCommand($"SELECT ps.id, ps.player_id, ps.team_id, ps.entry_date, ps.release_date,  c.name, c.player_position, c.age, c.surname, c.patronymic, t.title, t.coach, t.city FROM player_history ps JOIN player c ON ps.player_id = c.`id` JOIN team t ON ps.team_id = t.`id` WHERE ps.player_id = {playerid}");
                 try
                 {
                     // выполнение запроса, который возвращает результат-таблицу
@@ -179,11 +179,11 @@ namespace Match_Analysis.Model
                     // в цикле читаем построчно всю таблицу
                     while (dr.Read())
                     {
-                        int id = dr.GetInt32("ps.id");
+                        int id = dr.GetInt32(0);
 
-                        int player_id = dr.GetInt32("ps.playr_id");
+                        int player_id = dr.GetInt32(1);
 
-                        int team_id = dr.GetInt32("ps.team_id");
+                        int team_id = dr.GetInt32(2);
 
                         DateTime entry_date = new DateTime();
                         if (!dr.IsDBNull("entry_date"))

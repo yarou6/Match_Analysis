@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Match_Analysis.VM
 {
@@ -67,9 +68,9 @@ namespace Match_Analysis.VM
                 Signal();
             }
         }
-
-
         public CommandMvvm AddTeam { get; set; }
+
+        public CommandMvvm EditTeam { get; set; }
 
         public CommandMvvm Exit { get; set; }
 
@@ -79,21 +80,42 @@ namespace Match_Analysis.VM
 
             AddTeam = new CommandMvvm(() =>
             {
-                if(NewPlayerHistory.Id == 0)
+                if (PlayerHistories.FirstOrDefault(p => p.ReleaseDate == null) != null)
                 {
-                    NewPlayerHistory.TeamId = SelectedTeam.Id;
+                   MessageBox.Show("Вы уверены что хотите удалить игрока?");
+                    return;
+                }
+                    
+                NewPlayerHistory.Id = 0;
+                NewPlayerHistory.TeamId = SelectedTeam.Id;
+
+
                     if (NewPlayerHistory.ReleaseDate == new DateTime())
                         NewPlayerHistory.ReleaseDate = null;
-                    NewPlayer.TeamId = NewPlayerHistory.TeamId;
-                    NewPlayerHistory.PlayerId = NewPlayer.Id;
-                    PlayerHistoryDB.GetDb().Insert(NewPlayerHistory);
-
-                }else PlayerHistoryDB.GetDb().Update(NewPlayerHistory);
+                    
+                NewPlayer.TeamId = NewPlayerHistory.TeamId;
+                NewPlayerHistory.PlayerId = NewPlayer.Id;
+                PlayerHistoryDB.GetDb().Insert(NewPlayerHistory);
 
                 SelectAll();
-
+                NewPlayerHistory = new PlayerHistory();
             }, () => true);
 
+
+            
+
+            EditTeam = new CommandMvvm(() =>
+            {
+
+                NewPlayerHistory.TeamId = SelectedTeam.Id;
+                NewPlayer.TeamId = NewPlayerHistory.TeamId;
+                NewPlayerHistory.PlayerId = NewPlayer.Id;
+                PlayerHistoryDB.GetDb().Update(NewPlayerHistory);
+
+                NewPlayerHistory = new PlayerHistory();
+
+            }, () => NewPlayerHistory.Id != 0); 
+            
 
             Exit = new CommandMvvm(() =>
             {

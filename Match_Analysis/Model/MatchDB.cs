@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using MySqlConnector;
 using System.Windows;
+using System.Data;
+using System.Windows.Controls;
+using System.Xml.Linq;
 
 namespace Match_Analysis.Model
 {
@@ -67,7 +70,7 @@ namespace Match_Analysis.Model
 
             if (connection.OpenConnection())
             {
-                var command = connection.CreateCommand("select `id`, `date`, `team_score1`, `team_score2`, `team_id1`, `team_id2` from `match` ");
+                var command = connection.CreateCommand("SELECT m.id, m.team_id1, m.team_id2, m.date, m.team_score1, m.team_score2, t.title, t.city, t.coach, t2.title, t2.city, t2.city FROM `match` m JOIN team t ON m.team_id1 = t.id JOIN team t2 ON m.team_id2 = t2.id");
                 try
                 {
                     // выполнение запроса, который возвращает результат-таблицу
@@ -84,14 +87,55 @@ namespace Match_Analysis.Model
                         
                         DateTime date = new DateTime();
                         if (!dr.IsDBNull(3))
-                            date = dr.GetDateTime("date");
+                            date = dr.GetDateTime("m.date");
 
                         int team_score1 = 0;
                         if (!dr.IsDBNull(4))
-                            team_score1 = dr.GetInt32("team_score1");
+                            team_score1 = dr.GetInt32("m.team_score1");
                         int team_score2 = 0;
                         if (!dr.IsDBNull(5))
-                            team_score2 = dr.GetInt32("team_score2");
+                            team_score2 = dr.GetInt32("m.team_score2");
+
+                        string title = string.Empty;
+                        if (!dr.IsDBNull("t.title"))
+                            title = dr.GetString("t.title");
+
+                        string coach = string.Empty;
+                        if (!dr.IsDBNull("t.coach"))
+                            coach = dr.GetString("t.coach");
+
+                        string city = string.Empty;
+                        if (!dr.IsDBNull("t.city"))
+                            city = dr.GetString("t.city");
+
+                        string title2 = string.Empty;
+                        if (!dr.IsDBNull("t2.title"))
+                            title2 = dr.GetString("t2.title");
+
+                        string coach2 = string.Empty;
+                        if (!dr.IsDBNull("t2.coach"))
+                            coach2 = dr.GetString("t2.coach");
+
+                        string city2 = string.Empty;
+                        if (!dr.IsDBNull("t2.city"))
+                            city2 = dr.GetString("t2.city");
+
+                        Team team1 = new Team
+                        {
+                            Id = team_id1,
+                            Title = title,
+                            Coach = coach,
+                            City = city,
+                        };
+
+                        Team team2 = new Team
+                        {
+                            Id = team_id2,
+                            Title = title2,
+                            Coach = coach2,
+                            City = city2,
+                        };
+
 
 
                         matchs.Add(new Match
@@ -102,6 +146,8 @@ namespace Match_Analysis.Model
                             TeamId2 = team_id2,
                             TeamScore1 = team_score1,
                             TeamScore2 = team_score2,
+                            Team1 = team1,
+                            Team2 = team2,
                         });
                     }
                 }
