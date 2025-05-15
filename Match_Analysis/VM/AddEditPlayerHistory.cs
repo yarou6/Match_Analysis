@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Match_Analysis.VM
 {
@@ -19,6 +20,17 @@ namespace Match_Analysis.VM
             set
             {
                 newPlayerHistory = value;
+                Signal();
+            }
+        }
+
+        private PlayerHistory selectedPlayerHistory;
+        public PlayerHistory SelectedPlayerHistory
+        {
+            get => selectedPlayerHistory;
+            set
+            {
+                selectedPlayerHistory = value;
                 Signal();
             }
         }
@@ -70,6 +82,9 @@ namespace Match_Analysis.VM
 
 
         public CommandMvvm AddTeam { get; set; }
+        public CommandMvvm RemoveHistory { get; set; }
+
+        public CommandMvvm EditTeam { get; set; }
 
         public CommandMvvm Exit { get; set; }
 
@@ -79,27 +94,66 @@ namespace Match_Analysis.VM
 
             AddTeam = new CommandMvvm(() =>
             {
-                if(NewPlayerHistory.Id == 0)
+                if (PlayerHistories.FirstOrDefault(p => p.ReleaseDate == null) != null)
                 {
-                    NewPlayerHistory.TeamId = SelectedTeam.Id;
-                    if (NewPlayerHistory.ReleaseDate == new DateTime())
-                        NewPlayerHistory.ReleaseDate = null;
-                    NewPlayer.TeamId = NewPlayerHistory.TeamId;
-                    NewPlayerHistory.PlayerId = NewPlayer.Id;
-                    PlayerHistoryDB.GetDb().Insert(NewPlayerHistory);
+                    MessageBox.Show("Добавьте предыдущей команде выход");
+                    return;
+                }
 
-                }else PlayerHistoryDB.GetDb().Update(NewPlayerHistory);
+                NewPlayerHistory.Id = 0;
+
+                NewPlayerHistory.TeamId = SelectedTeam.Id;
+
+
+                if (NewPlayerHistory.ReleaseDate == new DateTime())
+                    NewPlayerHistory.ReleaseDate = null;
+
+                NewPlayer.TeamId = NewPlayerHistory.TeamId;
+                NewPlayerHistory.PlayerId = NewPlayer.Id;
+                PlayerHistoryDB.GetDb().Insert(NewPlayerHistory);
 
                 SelectAll();
+                NewPlayerHistory = new PlayerHistory();
 
             }, () => true);
 
 
+
+
+            EditTeam = new CommandMvvm(() =>
+            {
+
+                NewPlayerHistory.TeamId = SelectedTeam.Id;
+
+                NewPlayer.TeamId = NewPlayerHistory.TeamId;
+
+                NewPlayerHistory.PlayerId = NewPlayer.Id;
+
+                PlayerHistoryDB.GetDb().Update(NewPlayerHistory);
+
+                NewPlayerHistory = new PlayerHistory();
+
+            }, () => NewPlayerHistory.Id != 0);
+
+
+            //NewPlayerHistory.Id == 0 КАК ВАРИАНТ
+
+            RemoveHistory = new CommandMvvm(() =>
+            {
+                var playervozvrat = MessageBox.Show("Вы уверены что хотите удалить историю?", "Подтверждение", MessageBoxButton.YesNo);
+
+                if (playervozvrat == MessageBoxResult.Yes)
+                {
+                    PlayerHistoryDB.GetDb().Remove(SelectedPlayerHistory);
+                }
+
+                SelectAll();
+            }, () => SelectedPlayerHistory != null);
+
+
             Exit = new CommandMvvm(() =>
             {
-                NewPlayerHistory.ReleaseDate = null;
                 close?.Invoke();
-
             }, () => true);
 
         }

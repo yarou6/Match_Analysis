@@ -49,17 +49,6 @@ namespace Match_Analysis.VM
         }
 
 
-        private PlayerHistory selectedPlayerHistory;
-        public PlayerHistory SelectedPlayerHistory
-        {
-            get => selectedPlayerHistory;
-            set
-            {
-                selectedPlayerHistory = value;
-                Signal();
-            }
-        }
-
 
         public CommandMvvm AddTeam { get; set; }
         public CommandMvvm AddPlayer { get; set; }
@@ -68,27 +57,26 @@ namespace Match_Analysis.VM
             AddPlayer = new CommandMvvm(() =>
             {
 
-                //NewPlayer.TeamId = NewPlayer.Team.Id;
                 NewPlayer.PlayerPosition = Positional;
                 if (NewPlayer.Id == 0)
                 {
                     PlayerDB.GetDb().Insert(NewPlayer);
                     close?.Invoke();
 
-                } else PlayerDB.GetDb().Update(newPlayer);
+                } else PlayerDB.GetDb().Update(NewPlayer);
                 close?.Invoke();
 
                 
 
         }, () => 
                 NewPlayer != null &&
-                //NewPlayer.Team != null &&
-                !string.IsNullOrEmpty(newPlayer.Surname) &&
-                !string.IsNullOrEmpty(newPlayer.Name) &&
+                NewPlayer.TeamId != 0 &&
+                !string.IsNullOrEmpty(NewPlayer.Surname) &&
+                !string.IsNullOrEmpty(NewPlayer.Name) &&
                 //!string.IsNullOrEmpty(newPlayer.PlayerPosition) &&
                 Positional != null &&
-                newPlayer.Age >= 16 &&
-                newPlayer.Age <= 52
+                NewPlayer.Age >= 16 &&
+                NewPlayer.Age <= 52
                 );
 
 
@@ -114,14 +102,12 @@ namespace Match_Analysis.VM
             }, () => 
             
                 NewPlayer != null &&
-                !string.IsNullOrEmpty(newPlayer.Surname) &&
-                !string.IsNullOrEmpty(newPlayer.Name) &&
+                !string.IsNullOrEmpty(NewPlayer.Surname) &&
+                !string.IsNullOrEmpty(NewPlayer.Name) &&
                 Positional != null &&
-                newPlayer.Age >= 16 &&
-                newPlayer.Age <= 52
+                NewPlayer.Age >= 16 &&
+                NewPlayer.Age <= 52
                 );
-
-
         }
         public void SetPlayer(Player selectedPlayer)
         {

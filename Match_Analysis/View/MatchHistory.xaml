@@ -20,7 +20,7 @@
 
         </Grid.RowDefinitions>
 
-        <ListView  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Matchs}" SelectedItem="{Binding SelectedMatch}">
+        <ListView  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Matches}" SelectedItem="{Binding SelectedMatch}">
             <ListView.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Изменить матч" />
@@ -29,11 +29,11 @@
             </ListView.ContextMenu>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Первая команда" DisplayMemberBinding="{Binding TeamId1}"/>
-                    <GridViewColumn Header="Счет первой команды" DisplayMemberBinding="{Binding FirstName}"/>
-                    <GridViewColumn Header="Счет второй команды" DisplayMemberBinding="{Binding FirstName}"/>
-                    <GridViewColumn Header="Вторая команда" DisplayMemberBinding="{Binding TeamId2}"/>
-                    <GridViewColumn Header="Дата" DisplayMemberBinding="{Binding Date}"/>
+                    <GridViewColumn Header="Первая команда" DisplayMemberBinding="{Binding TeamId1}" Width="Auto"/>
+                    <GridViewColumn Header="Счет первой команды" DisplayMemberBinding="{Binding TeamScore1}" Width="Auto"/>
+                    <GridViewColumn Header="Счет второй команды" DisplayMemberBinding="{Binding TeamScore2}" Width="Auto"/>
+                    <GridViewColumn Header="Вторая команда" DisplayMemberBinding="{Binding TeamId2}" Width="Auto"/>
+                    <GridViewColumn Header="Дата" DisplayMemberBinding="{Binding Date}" Width="Auto"/>
                 </GridView>
             </ListView.View>
         </ListView>

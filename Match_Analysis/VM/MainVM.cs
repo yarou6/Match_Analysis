@@ -97,16 +97,7 @@ namespace Match_Analysis.VM
                 Signal();
             }
         }
-        private PlayerHistory selectedPlayerHistory;
-        public PlayerHistory SelectedPlayerHistory
-        {
-            get => selectedPlayerHistory;
-            set
-            {
-                selectedPlayerHistory = value;
-                Signal();
-            }
-        }
+        
 
 
 

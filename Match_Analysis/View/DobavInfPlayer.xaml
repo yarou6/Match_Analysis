@@ -22,11 +22,18 @@
         </Grid.RowDefinitions>
 
 
-        <TextBox Text="Название команды" Grid.Row="0" Width="300" Height="20" HorizontalAlignment="Center" />
-		<Label  Content="Кто забил гол" Grid.Row="1" Margin="21,0,0,0"/>
-        <ComboBox Text="Кто забил" Grid.Row="1" Width="300" Height="20" VerticalAlignment="Bottom"/>
+        <StackPanel Orientation="Horizontal">
+
+            <TextBlock Text="Название команды:" Grid.Row="0" Margin="21,10,0,0" Width="Auto" Height="20" HorizontalAlignment="Center"/>
+            <TextBlock Text="{Binding Team.Title}" Grid.Row="0" Width="Auto" Height="20" HorizontalAlignment="Center"  DataContext="{Binding NewPlayer}" Margin="21,0,0,0"/>
+
+        </StackPanel>
+        
+        <Label  Content="Кто забил гол" Grid.Row="1" Margin="21,0,0,0"/>
+        <ComboBox Text="Кто забил" Grid.Row="1" Width="300" Height="20" VerticalAlignment="Bottom" SelectedItem="{Binding SelectedPlayerGoal}" ItemsSource="{Binding Players}" DisplayMemberPath="Surname"/>
         <Label  Content="Кто отдал голевой пас" Grid.Row="2" Margin="21,0,0,0"/>
-        <ComboBox Grid.Row="2" Width="300" Height="20" VerticalAlignment="Bottom"/>
+        <ComboBox Grid.Row="2" Width="300" Height="20" VerticalAlignment="Bottom" SelectedItem="{Binding SelectedPlayerAssist}" ItemsSource="{Binding Players}" DisplayMemberPath="Surname"/>
+        
         <Button Grid.Row="3" Width="300" Height="20" Content="Применить изменения" Command="{Binding AddPlayer}"/>
 
     </Grid>

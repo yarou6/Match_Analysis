@@ -10,8 +10,8 @@ namespace Match_Analysis.Model
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
-        public Team Team { get; set; }
-
+        public Team Team1 { get; set; }
+        public Team Team2 { get; set; }
         public int TeamId1 { get; set; }
 
         public int TeamId2 { get; set; }
