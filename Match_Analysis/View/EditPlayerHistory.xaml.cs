@@ -27,7 +27,6 @@ namespace Match_Analysis.View
 
 
             ((AddEditPlayerHistory)this.DataContext).SetPlayer(editPlayer);
-
             ((AddEditPlayerHistory)this.DataContext).SetClose(Close);
         }
     }

@@ -12,50 +12,6 @@ namespace Match_Analysis.VM
 {
     internal class AddEditPlayerHistory : BaseVM
     {
-
-        public DateTime? EntryDate
-        {
-            get => NewPlayerHistory.EntryDate;
-            set
-            {
-                if (NewPlayerHistory.EntryDate != value)
-                {
-                    NewPlayerHistory.EntryDate = value;
-
-                    // Проверка: ReleaseDate >= EntryDate
-                    if (NewPlayerHistory.ReleaseDate != null && NewPlayerHistory.ReleaseDate < NewPlayerHistory.EntryDate)
-                    {
-                        MessageBox.Show("Дата выхода не может быть раньше даты входа.");
-                        NewPlayerHistory.ReleaseDate = null;
-                        Signal(nameof(ReleaseDate));
-                    }
-
-                    Signal();
-                    Signal(nameof(EntryDate));
-                }
-            }
-        }
-
-        public DateTime? ReleaseDate
-        {
-            get => NewPlayerHistory.ReleaseDate;
-            set
-            {
-                if (NewPlayerHistory.ReleaseDate != value)
-                {
-                    // Проверка: ReleaseDate >= EntryDate
-                    if (value != null && NewPlayerHistory.EntryDate != null && value < NewPlayerHistory.EntryDate)
-                    {
-                        MessageBox.Show("Дата выхода не может быть раньше даты входа.");
-                        return;
-                    }
-
-                    NewPlayerHistory.ReleaseDate = value;
-                    Signal();
-                    Signal(nameof(ReleaseDate));
-                }
-            }
-        }
         private PlayerHistory newPlayerHistory = new();
 
         public PlayerHistory NewPlayerHistory
@@ -63,7 +19,6 @@ namespace Match_Analysis.VM
             get => newPlayerHistory;
             set
             {
-
                 newPlayerHistory = value;
                 Signal();
             }
@@ -77,26 +32,6 @@ namespace Match_Analysis.VM
             {
                 selectedPlayerHistory = value;
                 Signal();
-
-                if (selectedPlayerHistory != null)
-                {
-                    NewPlayerHistory = new PlayerHistory
-                    {
-                        Id = selectedPlayerHistory.Id,
-                        PlayerId = selectedPlayerHistory.PlayerId,
-                        TeamId = selectedPlayerHistory.TeamId,
-                        EntryDate = selectedPlayerHistory.EntryDate,
-                        ReleaseDate = selectedPlayerHistory.ReleaseDate
-                    };
-
-                    SelectedTeam = Teams?.FirstOrDefault(t => t.Id == selectedPlayerHistory.TeamId);
-                }
-                else
-                {
-                    NewPlayerHistory = new PlayerHistory();
-                    SelectedTeam = null;
-                }
-
             }
         }
 
@@ -140,17 +75,12 @@ namespace Match_Analysis.VM
             get => selectedTeam;
             set
             {
-                if (selectedTeam != value)
-                {
-                    selectedTeam = value;
-
-                    if (selectedTeam != null)
-                        NewPlayerHistory.TeamId = selectedTeam.Id;
-
-                    Signal();
-                }
+                selectedTeam = value;
+                Signal();
             }
         }
+
+
         public CommandMvvm AddTeam { get; set; }
         public CommandMvvm RemoveHistory { get; set; }
 
@@ -161,78 +91,52 @@ namespace Match_Analysis.VM
         public AddEditPlayerHistory()
         {
 
+
             AddTeam = new CommandMvvm(() =>
             {
+                if (PlayerHistories.FirstOrDefault(p => p.ReleaseDate == null) != null)
+                {
+                    MessageBox.Show("Добавьте предыдущей команде выход");
+                    return;
+                }
 
-                // Очистка MinValue
-                if (NewPlayerHistory.ReleaseDate == DateTime.MinValue)
+                NewPlayerHistory.Id = 0;
+
+                NewPlayerHistory.TeamId = SelectedTeam.Id;
+
+
+                if (NewPlayerHistory.ReleaseDate == new DateTime())
                     NewPlayerHistory.ReleaseDate = null;
 
-                var lastHistory = PlayerHistories
-                    .Where(p => p.PlayerId == NewPlayer.Id)
-                    .OrderByDescending(p => p.EntryDate)
-                    .FirstOrDefault();
-
-                if (lastHistory != null &&
-                    (lastHistory.ReleaseDate == null || lastHistory.ReleaseDate == DateTime.MinValue))
-                {
-                    MessageBox.Show("Добавьте предыдущей команде дату выхода.");
-                    return;
-                }
-
-                // EntryDate новой записи меньше ReleaseDate предыдущей
-                if (lastHistory != null && NewPlayerHistory.EntryDate < lastHistory.ReleaseDate)
-                {
-                    MessageBox.Show("Дата входа не может быть раньше даты выхода предыдущей команды.");
-                    return;
-                }
-
-                // Проверка на выбор команды
-                //if (SelectedTeam == null)
-                //{
-                //    MessageBox.Show("Выберите команду.");
-                //    return;
-                //}
-
-                // Установка данных
-                NewPlayerHistory.Id = 0;
-                NewPlayerHistory.TeamId = SelectedTeam.Id;
-                NewPlayerHistory.PlayerId = NewPlayer.Id;
-
-                // Обновляем текущую команду игрока
                 NewPlayer.TeamId = NewPlayerHistory.TeamId;
-
-                // Вставка
+                NewPlayerHistory.PlayerId = NewPlayer.Id;
                 PlayerHistoryDB.GetDb().Insert(NewPlayerHistory);
 
                 SelectAll();
                 NewPlayerHistory = new PlayerHistory();
 
-            }, () => 
-            {
-                return NewPlayerHistory.EntryDate != null && SelectedTeam != null;
-            });
+            }, () => true);
+
+
 
 
             EditTeam = new CommandMvvm(() =>
             {
+
                 NewPlayerHistory.TeamId = SelectedTeam.Id;
+
+                NewPlayer.TeamId = NewPlayerHistory.TeamId;
+
                 NewPlayerHistory.PlayerId = NewPlayer.Id;
 
                 PlayerHistoryDB.GetDb().Update(NewPlayerHistory);
-                if (NewPlayerHistory.ReleaseDate == null)
-                {
-                    NewPlayer.TeamId = SelectedTeam.Id;
-                    PlayerDB.GetDb().Update(NewPlayer);
-                }
-
-                SelectAll();
 
                 NewPlayerHistory = new PlayerHistory();
 
-            }, () => SelectedPlayerHistory != null);
+            }, () => NewPlayerHistory.Id != 0);
 
 
+            //NewPlayerHistory.Id == 0 КАК ВАРИАНТ
 
             RemoveHistory = new CommandMvvm(() =>
             {
@@ -245,6 +149,7 @@ namespace Match_Analysis.VM
 
                 SelectAll();
             }, () => SelectedPlayerHistory != null);
+
 
             Exit = new CommandMvvm(() =>
             {

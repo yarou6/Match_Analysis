@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using MySqlConnector;
 using System.Windows;
 using System.Data;
-using System.Windows.Controls;
-using System.Xml.Linq;
 
 namespace Match_Analysis.Model
 {
@@ -86,47 +84,46 @@ namespace Match_Analysis.Model
 
 
                         DateTime date = new DateTime();
-                        if (!dr.IsDBNull(3))
-                            date = dr.GetDateTime("date");
+                        if (!dr.IsDBNull("m.date"))
+                            date = dr.GetDateTime("m.date");
 
                         int team_score1 = 0;
-                        if (!dr.IsDBNull(4))
-                            team_score1 = dr.GetInt32("team_score1");
-
+                        if (!dr.IsDBNull("m.team_score1"))
+                            team_score1 = dr.GetInt32("m.team_score1");
                         int team_score2 = 0;
-                        if (!dr.IsDBNull(5))
-                            team_score2 = dr.GetInt32("team_score2");
+                        if (!dr.IsDBNull("m.team_score2"))
+                            team_score2 = dr.GetInt32("m.team_score2");
 
-                        string title1 = string.Empty;
-                        if (!dr.IsDBNull(6))
-                            title1 = dr.GetString(6);
+                        string title = string.Empty;
+                        if (!dr.IsDBNull("t.title"))
+                            title = dr.GetString("t.title");
 
-                        string coach1 = string.Empty;
-                        if (!dr.IsDBNull(7))
-                            coach1 = dr.GetString(7);
+                        string coach = string.Empty;
+                        if (!dr.IsDBNull("t.coach"))
+                            coach = dr.GetString("t.coach");
 
-                        string city1 = string.Empty;
-                        if (!dr.IsDBNull(8))
-                            city1 = dr.GetString(8);
+                        string city = string.Empty;
+                        if (!dr.IsDBNull("t.city"))
+                            city = dr.GetString("t.city");
 
                         string title2 = string.Empty;
-                        if (!dr.IsDBNull(9))
-                            title2 = dr.GetString(9);
+                        if (!dr.IsDBNull("t2.title"))
+                            title2 = dr.GetString("t2.title");
 
                         string coach2 = string.Empty;
-                        if (!dr.IsDBNull(10))
-                            coach2 = dr.GetString(10);
+                        if (!dr.IsDBNull("t2.coach"))
+                            coach2 = dr.GetString("t2.coach");
 
                         string city2 = string.Empty;
-                        if (!dr.IsDBNull(11))
-                            city2 = dr.GetString(11);
+                        if (!dr.IsDBNull("t2.city"))
+                            city2 = dr.GetString("t2.city");
 
                         Team team1 = new Team
                         {
                             Id = team_id1,
-                            Title = title1,
-                            Coach = coach1,
-                            City = city1,
+                            Title = title,
+                            Coach = coach,
+                            City = city,
                         };
 
                         Team team2 = new Team

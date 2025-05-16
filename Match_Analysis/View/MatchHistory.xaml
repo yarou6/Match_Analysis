@@ -29,10 +29,10 @@
             </ListView.ContextMenu>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Первая команда" DisplayMemberBinding="{Binding Team1.Title}" Width="Auto"/>
+                    <GridViewColumn Header="Первая команда" DisplayMemberBinding="{Binding TeamId1}" Width="Auto"/>
                     <GridViewColumn Header="Счет первой команды" DisplayMemberBinding="{Binding TeamScore1}" Width="Auto"/>
                     <GridViewColumn Header="Счет второй команды" DisplayMemberBinding="{Binding TeamScore2}" Width="Auto"/>
-                    <GridViewColumn Header="Вторая команда" DisplayMemberBinding="{Binding Team2.Title}" Width="Auto"/>
+                    <GridViewColumn Header="Вторая команда" DisplayMemberBinding="{Binding TeamId2}" Width="Auto"/>
                     <GridViewColumn Header="Дата" DisplayMemberBinding="{Binding Date}" Width="Auto"/>
                 </GridView>
             </ListView.View>

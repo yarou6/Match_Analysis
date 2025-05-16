@@ -33,10 +33,12 @@
                 <DatePicker Grid.Row="0" Width="300" Height="25" Margin="0,0,0,0"  SelectedDate="{Binding Date, UpdateSourceTrigger=PropertyChanged}" DataContext="{Binding NewMatch}"/>
             
                 <Label Content="Первая команда" Grid.Row="1" Margin="14,0,0,0" />
-                <ComboBox Grid.Row="1" Width="300" Height="20" VerticalAlignment="Bottom" SelectedItem="{Binding SelectedMatch1}" ItemsSource="{Binding Teams}" DisplayMemberPath="Title"/>
+
+                <ComboBox Grid.Row="1" Width="300" Height="20" VerticalAlignment="Bottom" SelectedItem="{Binding SelectedTeam1}" ItemsSource="{Binding Teams}" DisplayMemberPath="Title"/>
             
                 <Label Content="Вторая команда команда" Grid.Row="2" Margin="14,0,0,0" />
-                <ComboBox Grid.Row="2" Width="300" Height="20" VerticalAlignment="Bottom" SelectedItem="{Binding SelectedMatch2}" ItemsSource="{Binding Teams}" DisplayMemberPath="Title"/>
+
+                <ComboBox Grid.Row="2" Width="300" Height="20" VerticalAlignment="Bottom" SelectedItem="{Binding SelectedTeam2}" ItemsSource="{Binding Teams}" DisplayMemberPath="Title"/>
 
                 <Label Content="Счет первой команда" Grid.Row="2" Margin="14,0,0,0"/>
                 <TextBox Text="{Binding TeamScore1, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Width="300" Height="20" HorizontalAlignment="Center" Margin="0,0,0,0" DataContext="{Binding NewMatch}"/>

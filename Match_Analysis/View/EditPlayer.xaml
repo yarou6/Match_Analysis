@@ -47,7 +47,7 @@
 
             <!-- Спросить как передать SelectedItem в ComboBox -->
 
-            <ComboBox Grid.Row="3" Width="300" Height="20" SelectedItem="{Binding Positional, UpdateSourceTrigger=PropertyChanged}" >
+            <ComboBox Grid.Row="3" Width="300" Height="20" SelectedItem="{Binding Positional}" >
                 <sys:String>Нападающий</sys:String>
                 <sys:String>Полузащитник</sys:String>
                 <sys:String>Защитник</sys:String>
