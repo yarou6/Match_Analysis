@@ -155,7 +155,6 @@ namespace Match_Analysis.VM
         public CommandMvvm RemoveHistory { get; set; }
 
         public CommandMvvm EditTeam { get; set; }
-
         public CommandMvvm Exit { get; set; }
 
         public AddEditPlayerHistory()
@@ -226,7 +225,7 @@ namespace Match_Analysis.VM
                     PlayerDB.GetDb().Update(NewPlayer);
                 }
 
-                SelectAll();
+                SelectAll();    
 
                 NewPlayerHistory = new PlayerHistory();
 
