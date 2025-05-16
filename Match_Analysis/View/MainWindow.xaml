@@ -4,12 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Match_Analysis.View"
+        xmlns:tool="clr-namespace:Match_Analysis.Tools"
         xmlns:mvvm="clr-namespace:Match_Analysis.VM"
         DataContext="{DynamicResource vm}"
         mc:Ignorable="d"
         Height="400" Width="800">
     <Window.Resources>
         <mvvm:MainVM x:Key="vm"/>
+        <tool:TeamTitleConverter  x:Key="TeamTitleConverter"/>
     </Window.Resources>
     <Grid>
         
@@ -72,7 +74,13 @@
                     <GridViewColumn Header="ФИО" DisplayMemberBinding="{Binding FIO}" Width="Auto"/>
                     <GridViewColumn Header="Возвраст" DisplayMemberBinding="{Binding Age}" Width="Auto"/>
                     <GridViewColumn Header="Позиция" DisplayMemberBinding="{Binding PlayerPosition}" Width="Auto"/>
-                    <GridViewColumn Header="Команда" DisplayMemberBinding="{Binding Team.Title}" Width="Auto"/>
+                    <GridViewColumn Header="Команда" Width="Auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Team, Converter={StaticResource TeamTitleConverter}}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>

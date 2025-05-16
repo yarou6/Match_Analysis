@@ -34,8 +34,8 @@ namespace Match_Analysis.VM
             }
         }
 
-        private Match selectedMatch1;
-        public Match SelectedMatch1
+        private Team selectedMatch1;
+        public Team SelectedMatch1
         {
             get => selectedMatch1;
             set
@@ -45,8 +45,8 @@ namespace Match_Analysis.VM
             }
         }
 
-        private Match selectedMatch2;
-        public Match SelectedMatch2
+        private Team selectedMatch2;
+        public Team SelectedMatch2
         {
             get => selectedMatch2;
             set
@@ -78,7 +78,6 @@ namespace Match_Analysis.VM
             AddMatch = new CommandMvvm(() =>
             {
                 
-
                 if (NewMatch.Id == 0)
                 {
                     NewMatch.TeamId1 = SelectedMatch1.Id;
@@ -88,6 +87,12 @@ namespace Match_Analysis.VM
                 }
                 else MatchDB.GetDb().Update(NewMatch);
                 close?.Invoke();
+
+
+
+
+
+
 
                 SelectAll();
             }, () =>

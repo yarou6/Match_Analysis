@@ -16,8 +16,8 @@ namespace Match_Analysis.Model
         public string Name { get; set; }
         public string Patronymic { get; set; }
 
-        public int TeamId { get; set; }
-        public Team Team { get; set; }
+        public int? TeamId { get; set; }
+        public Team? Team { get; set; }
 
 
         public string FIO
