@@ -71,7 +71,7 @@ namespace Match_Analysis.Model
 
             if (connection.OpenConnection())
             {
-                var command = connection.CreateCommand("SELECT b.id, b.team_id, b.name, b.player_position, b.age, b.surname, b.patronymic, t.title, t.coach, t.city FROM player b JOIN team t ON b.team_id = t.id");
+                var command = connection.CreateCommand("SELECT b.id, b.team_id, b.name, b.player_position, b.age, b.surname, b.patronymic, t.title, t.coach, t.city FROM player b LEFT JOIN team t ON b.team_id = t.id");
                 try
                 {
                     // выполнение запроса, который возвращает результат-таблицу
@@ -81,7 +81,7 @@ namespace Match_Analysis.Model
                     {
                         int id = dr.GetInt32(0);
 
-                        int team_id = dr.GetInt32(1);
+                        int? team_id = dr.IsDBNull(1) ? null : dr.GetInt32(1);
 
                         int age = 0;
                         if (!dr.IsDBNull(2))
@@ -117,7 +117,7 @@ namespace Match_Analysis.Model
 
                         Team team = new Team
                         {
-                            Id = team_id,
+                            Id = team_id ?? 0,
                             Title = title,
                             Coach = coach,
                             City = city,

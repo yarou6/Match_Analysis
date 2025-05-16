@@ -58,6 +58,7 @@ namespace Match_Analysis.VM
             {
 
                 NewPlayer.PlayerPosition = Positional;
+
                 if (NewPlayer.Id == 0)
                 {
                     PlayerDB.GetDb().Insert(NewPlayer);
@@ -66,11 +67,9 @@ namespace Match_Analysis.VM
                 } else PlayerDB.GetDb().Update(NewPlayer);
                 close?.Invoke();
 
-                
 
-        }, () => 
+            }, () => 
                 NewPlayer != null &&
-                NewPlayer.TeamId != 0 &&
                 !string.IsNullOrEmpty(NewPlayer.Surname) &&
                 !string.IsNullOrEmpty(NewPlayer.Name) &&
                 //!string.IsNullOrEmpty(newPlayer.PlayerPosition) &&
@@ -112,6 +111,7 @@ namespace Match_Analysis.VM
         public void SetPlayer(Player selectedPlayer)
         {
             NewPlayer = selectedPlayer;
+            Positional = selectedPlayer.PlayerPosition; // <- ВАЖНО: для ComboBox SelectedItem
         }
 
         Action close;
