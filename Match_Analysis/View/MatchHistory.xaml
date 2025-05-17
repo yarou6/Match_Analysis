@@ -33,7 +33,13 @@
                     <GridViewColumn Header="Счет первой команды" DisplayMemberBinding="{Binding TeamScore1}" Width="Auto"/>
                     <GridViewColumn Header="Счет второй команды" DisplayMemberBinding="{Binding TeamScore2}" Width="Auto"/>
                     <GridViewColumn Header="Вторая команда" DisplayMemberBinding="{Binding Team2.Title}" Width="Auto"/>
-                    <GridViewColumn Header="Дата" DisplayMemberBinding="{Binding Date}" Width="Auto"/>
+                    <GridViewColumn Header="Дата" Width="Auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Date, StringFormat=d}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>

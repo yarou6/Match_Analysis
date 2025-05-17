@@ -67,11 +67,17 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Команда" DisplayMemberBinding="{Binding Team.Title}" Width="Auto"/>
-                    <GridViewColumn Header="Вход в команду" DisplayMemberBinding="{Binding EntryDate}" Width="Auto"/>
+                    <GridViewColumn Header="Вход в команду" Width="Auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding EntryDate, StringFormat='{}{0:dd.MM.yyyy}'}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Header="Выход из команды" Width="Auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding ReleaseDate, Converter={StaticResource ReleaseDateConverter}}"/>
+                                <TextBlock Text="{Binding ReleaseDate, Converter={StaticResource ReleaseDateConverter}}"/>  
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

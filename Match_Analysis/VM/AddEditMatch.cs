@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Match_Analysis.Model;
 using Match_Analysis.View;
 
@@ -77,42 +78,72 @@ namespace Match_Analysis.VM
 
             AddMatch = new CommandMvvm(() =>
             {
-                
+                NewMatch.TeamId1 = SelectedMatch1.Id;
+                NewMatch.TeamId2 = SelectedMatch2.Id;
+
                 if (NewMatch.Id == 0)
-                {
-                    NewMatch.TeamId1 = SelectedMatch1.Id;
-                    NewMatch.TeamId2 = SelectedMatch2.Id;
-
                     MatchDB.GetDb().Insert(NewMatch);
-                }
-                else MatchDB.GetDb().Update(NewMatch);
+                else
+                    MatchDB.GetDb().Update(NewMatch);
+
                 close?.Invoke();
-
-
-
-
-
-
-
                 SelectAll();
             }, () =>
+                SelectedMatch1 != null &&
+                SelectedMatch2 != null &&
+                SelectedMatch1.Id != SelectedMatch2.Id &&
                 NewMatch.TeamScore1 >= 0 &&
                 NewMatch.TeamScore1 <= 11 &&
                 NewMatch.TeamScore2 >= 0 &&
-                NewMatch.TeamScore2 <= 11 );
+                NewMatch.TeamScore2 <= 11);
 
 
             AddInf1 = new CommandMvvm(() =>
             {
-                new DobavInfPlayer().ShowDialog();
+                if (NewMatch.Id == 0)
+                {
+                    NewMatch.TeamId1 = SelectedMatch1.Id;
+                    NewMatch.TeamId2 = SelectedMatch2.Id;
+                    MatchDB.GetDb().Insert(NewMatch); // 💾 Сохраняем матч
+                }
+                var vm = new AddInfPlayer();
+                vm.InitializePlayers(NewMatch.Id, NewMatch.TeamScore1, SelectedMatch1);
+                var window = new DobavInfPlayer { DataContext = vm };
+                vm.SetClose(window.Close);
+                window.ShowDialog();
+            }, () =>
+            SelectedMatch1 != null &&
+            SelectedMatch2 != null &&
+            SelectedMatch1.Id != SelectedMatch2.Id &&
+            NewMatch.TeamScore1 >= 0 &&
+            NewMatch.TeamScore1 <= 11 &&
+            NewMatch.TeamScore2 >= 0 &&
+            NewMatch.TeamScore2 <= 11);
 
-            }, () => true);
+
+
 
             AddInf2 = new CommandMvvm(() =>
             {
-                new DobavInfPlayer().ShowDialog();
-
-            }, () => true);
+                if (NewMatch.Id == 0)
+                {
+                    NewMatch.TeamId1 = SelectedMatch1.Id;
+                    NewMatch.TeamId2 = SelectedMatch2.Id;
+                    MatchDB.GetDb().Insert(NewMatch); // 💾 Сохраняем матч
+                }
+                var vm = new AddInfPlayer();
+                vm.InitializePlayers(NewMatch.Id, NewMatch.TeamScore2, SelectedMatch2);
+                var window = new DobavInfPlayer { DataContext = vm };
+                vm.SetClose(window.Close);
+                window.ShowDialog();
+            }, () =>
+            SelectedMatch1 != null &&
+            SelectedMatch2 != null &&
+            SelectedMatch1.Id != SelectedMatch2.Id &&
+            NewMatch.TeamScore1 >= 0 &&
+            NewMatch.TeamScore1 <= 11 &&
+            NewMatch.TeamScore2 >= 0 &&
+            NewMatch.TeamScore2 <= 11);
 
         }
 

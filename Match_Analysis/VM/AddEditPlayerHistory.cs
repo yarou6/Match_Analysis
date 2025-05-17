@@ -273,6 +273,28 @@ namespace Match_Analysis.VM
         {
             PlayerHistories = new ObservableCollection<PlayerHistory>(PlayerHistoryDB.GetDb().SelectPlayer(NewPlayer.Id));
             Teams = new List<Team>(TeamDB.GetDb().SelectAll());
+
+            // Обновление статуса "Свободный агент"
+            var lastHistory = PlayerHistories
+                .OrderByDescending(h => h.EntryDate)
+                .FirstOrDefault();
+
+            if (lastHistory != null)
+            {
+                bool hasLeft = lastHistory.ReleaseDate != null &&
+                               lastHistory.ReleaseDate != DateTime.MinValue;
+
+                if (hasLeft)
+                {
+                    NewPlayer.TeamId = 0; // свободный агент
+                }
+                else
+                {
+                    NewPlayer.TeamId = lastHistory.TeamId; // текущая команда
+                }
+
+                PlayerDB.GetDb().Update(NewPlayer);
+            }
         }
     }
 }

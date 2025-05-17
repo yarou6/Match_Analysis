@@ -27,28 +27,48 @@ namespace Match_Analysis.Model
 
             if (connection.OpenConnection())
             {
-                MySqlCommand cmd = connection.CreateCommand("insert into `player_history` Values (0, @EntryDate, @ReleaseDate, @PlayerId, @TeamId);select LAST_INSERT_ID();");
-
-                // путем добавления значений в запрос через параметры мы используем экранирование опасных символов
-                cmd.Parameters.Add(new MySqlParameter("EntryDate", playerHistory.EntryDate));
-                cmd.Parameters.Add(new MySqlParameter("ReleaseDate", playerHistory.ReleaseDate));
-                cmd.Parameters.Add(new MySqlParameter("PlayerId", playerHistory.PlayerId));
-                cmd.Parameters.Add(new MySqlParameter("TeamId", playerHistory.TeamId));
                 try
                 {
-                    // выполняем запрос через ExecuteScalar, получаем id вставленной записи
-                    // если нам не нужен id, то в запросе убираем часть select LAST_INSERT_ID(); и выполняем команду через ExecuteNonQuery
+                    // ✅ Проверка: есть ли такая же запись уже в таблице
+                    var checkCmd = connection.CreateCommand(@"
+                SELECT COUNT(*) 
+                FROM `player_history` 
+                WHERE `player_id` = @PlayerId 
+                  AND `team_id` = @TeamId 
+                  AND `entry_date` = @EntryDate 
+                  AND `release_date` = @ReleaseDate");
+
+                    checkCmd.Parameters.Add(new MySqlParameter("PlayerId", playerHistory.PlayerId));
+                    checkCmd.Parameters.Add(new MySqlParameter("TeamId", playerHistory.TeamId));
+                    checkCmd.Parameters.Add(new MySqlParameter("EntryDate", playerHistory.EntryDate));
+                    checkCmd.Parameters.Add(new MySqlParameter("ReleaseDate", playerHistory.ReleaseDate));
+
+                    long count = (long)checkCmd.ExecuteScalar();
+
+                    if (count > 0)
+                    {
+                        // Уже существует — не вставляем
+                        MessageBox.Show("Такая запись уже существует.");
+                        connection.CloseConnection();
+                        return false;
+                    }
+
+                    // ✅ Вставка новой записи
+                    MySqlCommand cmd = connection.CreateCommand("INSERT INTO `player_history` VALUES (0, @EntryDate, @ReleaseDate, @PlayerId, @TeamId); SELECT LAST_INSERT_ID();");
+                    cmd.Parameters.Add(new MySqlParameter("EntryDate", playerHistory.EntryDate));
+                    cmd.Parameters.Add(new MySqlParameter("ReleaseDate", playerHistory.ReleaseDate));
+                    cmd.Parameters.Add(new MySqlParameter("PlayerId", playerHistory.PlayerId));
+                    cmd.Parameters.Add(new MySqlParameter("TeamId", playerHistory.TeamId));
+
                     int id = (int)(ulong)cmd.ExecuteScalar();
                     if (id > 0)
                     {
-                        MessageBox.Show(id.ToString());
-                        // назначаем полученный id обратно в объект для дальнейшей работы
                         playerHistory.Id = id;
                         result = true;
                     }
                     else
                     {
-                        MessageBox.Show("Запись не добавлена");
+                        MessageBox.Show("Не удалось добавить запись.");
                     }
                 }
                 catch (Exception ex)
@@ -56,6 +76,7 @@ namespace Match_Analysis.Model
                     MessageBox.Show(ex.Message);
                 }
             }
+
             connection.CloseConnection();
             return result;
         }

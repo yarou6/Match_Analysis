@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using Match_Analysis.Model;
@@ -10,7 +12,7 @@ namespace Match_Analysis.VM
 {
     internal class AddInfPlayer : BaseVM
     {
-        public List<Player> Players
+        public ObservableCollection<Player> Players
         {
             get => players;
             set
@@ -19,27 +21,79 @@ namespace Match_Analysis.VM
                 Signal();
             }
         }
-
-        private Match selectedPlayerGoal;
-        public Match SelectedPlayerGoal
+        public ObservableCollection<Player> GetPlayersInTeamAtDate(Team team, DateTime matchDate)
         {
-            get => selectedPlayerGoal;
+            var allPlayers = PlayerDB.GetDb().SelectAll().Where(p => p.TeamId == team.Id);
+
+            // Допустим есть PlayerHistory с StartDate и EndDate для игрока
+            var validPlayers = allPlayers.Where(p =>
+            {
+                var histories = PlayerHistoryDB.GetDb().SelectPlayer(p.Id);
+                return histories.Any(h => h.TeamId == team.Id && h.EntryDate <= matchDate && (h.ReleaseDate == null || h.ReleaseDate >= matchDate));
+            });
+
+            return new ObservableCollection<Player>(validPlayers);
+        }
+
+        private ObservableCollection<Player> selectedGoalPlayers = new();
+
+        private ObservableCollection<Player> selectedAssistPlayers = new();
+        public ObservableCollection<Player> SelectedGoalPlayers
+        {
+            get => selectedGoalPlayers;
             set
             {
-                selectedPlayerGoal = value;
+                selectedGoalPlayers = value;
                 Signal();
             }
         }
 
-        private Match selectedPlayerAssist;
-        public Match SelectedPlayerAssist
+        public ObservableCollection<Player> SelectedAssistPlayers
         {
-            get => selectedPlayerAssist;
+            get => selectedAssistPlayers;
             set
             {
-                selectedPlayerAssist = value;
+                selectedAssistPlayers = value;
                 Signal();
             }
+        }
+
+        public int MatchId { get; set; }
+        public int GoalCount { get; set; }
+        public int AssistCount { get; set; }
+        public Team Team { get; private set; }
+        public void InitializePlayers(int matchId, int goals, Team team)
+        {
+            MatchId = matchId;
+
+            GoalCount = goals;
+
+            Random rand = new Random();
+            int minAssists = 0;
+            if (goals >= 3)
+            {
+                minAssists = Math.Min(1, goals); // гарантируем, что minAssists <= goals
+                if (goals >= 6)
+                {
+                    minAssists = Math.Min(4, goals); // гарантируем, что minAssists <= goals
+                }
+            }
+
+            int assists = rand.Next(minAssists, goals + 1);
+
+            AssistCount = assists;
+
+            Team = team;
+
+            Players = new ObservableCollection<Player>(PlayerDB.GetDb().SelectAll().Where(p => p.TeamId == team.Id));
+
+            SelectedGoalPlayers = new ObservableCollection<Player>(new Player[goals]);
+            SelectedAssistPlayers = new ObservableCollection<Player>(new Player[assists]);
+
+            Signal(nameof(Players));
+            Signal(nameof(SelectedGoalPlayers));
+            Signal(nameof(SelectedAssistPlayers));
+            Signal(nameof(Team));
         }
 
 
@@ -50,6 +104,29 @@ namespace Match_Analysis.VM
             SelectAll();
             AddPlayer = new CommandMvvm(() =>
             {
+                foreach (var player in SelectedGoalPlayers.Where(p => p != null))
+                {
+                    PlayerStatistics stats = new()
+                    {
+                        PlayerId = player.Id,
+                        MatchId = MatchId,
+                        Goal = 1,
+                        Assist = 0
+                    };
+                    PlayerStatisticsDB.GetDb().Insert(stats);
+                }
+
+                foreach (var player in SelectedAssistPlayers.Where(p => p != null))
+                {
+                    PlayerStatistics stats = new()
+                    {
+                        PlayerId = player.Id,
+                        MatchId = MatchId,
+                        Goal = 0,
+                        Assist = 1
+                    };
+                    PlayerStatisticsDB.GetDb().Insert(stats);
+                }
 
                 close?.Invoke();
 
@@ -58,7 +135,7 @@ namespace Match_Analysis.VM
 
         }
         Action close;
-        private List<Player> players = new();
+        private ObservableCollection<Player> players = new();
         internal void SetClose(Action close)
         {
             this.close = close;
@@ -66,7 +143,7 @@ namespace Match_Analysis.VM
 
         private void SelectAll()
         {
-            Players = new List<Player>(PlayerDB.GetDb().SelectAll());
+            Players = new ObservableCollection<Player>(PlayerDB.GetDb().SelectAll());
         }
     }
 }

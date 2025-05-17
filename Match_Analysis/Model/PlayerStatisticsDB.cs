@@ -25,28 +25,51 @@ namespace Match_Analysis.Model
 
             if (connection.OpenConnection())
             {
-                MySqlCommand cmd = connection.CreateCommand("insert into `player_statistics` Values (0, @Goal, @Assist, @PlayerId, @MatchId);select LAST_INSERT_ID();");
-
-                // путем добавления значений в запрос через параметры мы используем экранирование опасных символов
-                cmd.Parameters.Add(new MySqlParameter("Goal", playerstatistics.Goal));
-                cmd.Parameters.Add(new MySqlParameter("Assist", playerstatistics.Assist));
-                cmd.Parameters.Add(new MySqlParameter("PlayerId", playerstatistics.PlayerId));
-                cmd.Parameters.Add(new MySqlParameter("MatchId", playerstatistics.MatchId));
                 try
                 {
-                    // выполняем запрос через ExecuteScalar, получаем id вставленной записи
-                    // если нам не нужен id, то в запросе убираем часть select LAST_INSERT_ID(); и выполняем команду через ExecuteNonQuery
+                    // ✅ Проверка: существует ли такая запись
+                    var checkCmd = connection.CreateCommand(@"
+                SELECT COUNT(*) 
+                FROM `player_statistics`
+                WHERE `player_id` = @PlayerId 
+                  AND `match_id` = @MatchId 
+                  AND `goal` = @Goal 
+                  AND `assist` = @Assist");
+
+                    checkCmd.Parameters.Add(new MySqlParameter("PlayerId", playerstatistics.PlayerId));
+                    checkCmd.Parameters.Add(new MySqlParameter("MatchId", playerstatistics.MatchId));
+                    checkCmd.Parameters.Add(new MySqlParameter("Goal", playerstatistics.Goal));
+                    checkCmd.Parameters.Add(new MySqlParameter("Assist", playerstatistics.Assist));
+
+                    long count = (long)checkCmd.ExecuteScalar();
+
+                    if (count > 0)
+                    {
+                        MessageBox.Show("Такая статистика уже существует для данного игрока и матча.");
+                        connection.CloseConnection();
+                        return false;
+                    }
+
+                    // 📝 Вставка новой записи
+                    MySqlCommand cmd = connection.CreateCommand(@"
+                INSERT INTO `player_statistics` 
+                VALUES (0, @Goal, @Assist, @PlayerId, @MatchId);
+                SELECT LAST_INSERT_ID();");
+
+                    cmd.Parameters.Add(new MySqlParameter("Goal", playerstatistics.Goal));
+                    cmd.Parameters.Add(new MySqlParameter("Assist", playerstatistics.Assist));
+                    cmd.Parameters.Add(new MySqlParameter("PlayerId", playerstatistics.PlayerId));
+                    cmd.Parameters.Add(new MySqlParameter("MatchId", playerstatistics.MatchId));
+
                     int id = (int)(ulong)cmd.ExecuteScalar();
                     if (id > 0)
                     {
-                        MessageBox.Show(id.ToString());
-                        // назначаем полученный id обратно в объект для дальнейшей работы
                         playerstatistics.Id = id;
                         result = true;
                     }
                     else
                     {
-                        MessageBox.Show("Запись не добавлена");
+                        MessageBox.Show("Запись не добавлена.");
                     }
                 }
                 catch (Exception ex)
@@ -54,6 +77,7 @@ namespace Match_Analysis.Model
                     MessageBox.Show(ex.Message);
                 }
             }
+
             connection.CloseConnection();
             return result;
         }

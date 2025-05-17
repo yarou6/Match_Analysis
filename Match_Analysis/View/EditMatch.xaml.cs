@@ -23,7 +23,7 @@ namespace Match_Analysis.View
         public EditMatch()
         {
             InitializeComponent();
-
+            DataContext = this.Resources["vm"];
             ((AddEditMatch)this.DataContext).SetClose(Close);
         }
     }
