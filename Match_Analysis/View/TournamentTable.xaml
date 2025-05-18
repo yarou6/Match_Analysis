@@ -20,7 +20,7 @@
 
         </Grid.RowDefinitions>
 
-        <ListView  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding}" SelectedItem="{Binding SelectedPlayer}">
+        <ListView  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding}">
             <ListView.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Лист Книг" />
@@ -28,21 +28,20 @@
             </ListView.ContextMenu>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Название команды" DisplayMemberBinding="{Binding FirstName}"/>
-                    <GridViewColumn Header="Сыграно матчей" DisplayMemberBinding="{Binding FirstName}"/>
-                    <GridViewColumn Header="Победы" DisplayMemberBinding="{Binding FirstName}"/>
-                    <GridViewColumn Header="Ничьи" DisplayMemberBinding="{Binding FirstName}"/>
-                    <GridViewColumn Header="Поражения" DisplayMemberBinding="{Binding FirstName}"/>
-                    <GridViewColumn Header="Очки" DisplayMemberBinding="{Binding FirstName}"/>
-                    <GridViewColumn Header="Забито голов" DisplayMemberBinding="{Binding FirstName}"/>
-                    <GridViewColumn Header="Пропущено голов" DisplayMemberBinding="{Binding FirstName}"/>
+                    <GridViewColumn Header="Название команды" DisplayMemberBinding="{Binding }"/>
+                    <GridViewColumn Header="Сыграно матчей" DisplayMemberBinding="{Binding }"/>
+                    <GridViewColumn Header="Победы" DisplayMemberBinding="{Binding }"/>
+                    <GridViewColumn Header="Ничьи" DisplayMemberBinding="{Binding }"/>
+                    <GridViewColumn Header="Поражения" DisplayMemberBinding="{Binding }"/>
+                    <GridViewColumn Header="Очки" DisplayMemberBinding="{Binding }"/>
+                    <GridViewColumn Header="Забито голов" DisplayMemberBinding="{Binding }"/>
+                    <GridViewColumn Header="Пропущено голов" DisplayMemberBinding="{Binding }"/>
                 </GridView>
             </ListView.View>
         </ListView>
 
 
         <Button Width="100" HorizontalAlignment="Right" Command="{Binding Vozvrat}" />
-        <Image Margin="720,-8,20,397" Source="/png-transparent-green-arrow-computer-icons-left-arrow-angle-text-rectangle-thumbnail (1).png" Stretch="Fill" Grid.RowSpan="2"/>
 
     </Grid>
 </Window>

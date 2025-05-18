@@ -1,20 +1,30 @@
 ﻿using System;
-using System.Globalization;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+using Match_Analysis.VM;
 
-public class ReleaseDateConverter : IValueConverter
+namespace Match_Analysis.View
 {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    /// <summary>
+    /// Логика взаимодействия для TournamentStatistics.xaml
+    /// </summary>
+    public partial class TournamentTable : Window
     {
-        if (value == null || (value is DateTime dt && dt == DateTime.MinValue))
+        public TournamentTable()
         {
-            return "В команде по настоящее время";
-        }
-        return ((DateTime)value).ToShortDateString(); // или .ToString("dd.MM.yyyy")
-    }
+            InitializeComponent();
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        throw new NotImplementedException();
+            ((ProsmotrTournTable)this.DataContext).SetClose(Close);
+        }
     }
 }

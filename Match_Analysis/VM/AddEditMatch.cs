@@ -81,7 +81,20 @@ namespace Match_Analysis.VM
             {
                 NewMatch.TeamId1 = SelectedMatch1.Id;
                 NewMatch.TeamId2 = SelectedMatch2.Id;
-                
+
+                // Проверяем количество матчей между этими командами
+                int matchesCount = MatchDB.GetDb().CountMatchesBetweenTeams(NewMatch.TeamId1, NewMatch.TeamId2);
+
+                // Если матч новый (Id==0), то просто считаем. Если редактируем — исключаем текущий матч из подсчёта.
+                if (NewMatch.Id != 0)
+                    matchesCount--; // исключаем текущий матч из подсчёта
+
+                if (matchesCount >= 2)
+                {
+                    MessageBox.Show("Эти команды уже играли между собой 2 или более раз. Добавление матча невозможно.");
+                    return;
+                }
+
                 var playerHistoryDb = PlayerHistoryDB.GetDb();
                 if (!playerHistoryDb.BothTeamsHaveEnoughPlayers(NewMatch.TeamId1, NewMatch.TeamId2, NewMatch.Date))
                 {
@@ -113,6 +126,19 @@ namespace Match_Analysis.VM
                 NewMatch.TeamId1 = SelectedMatch1.Id;
                 NewMatch.TeamId2 = SelectedMatch2.Id;
 
+                // Проверяем количество матчей между этими командами
+                int matchesCount = MatchDB.GetDb().CountMatchesBetweenTeams(NewMatch.TeamId1, NewMatch.TeamId2);
+
+                // Если матч новый (Id==0), то просто считаем. Если редактируем — исключаем текущий матч из подсчёта.
+                if (NewMatch.Id != 0)
+                    matchesCount--; // исключаем текущий матч из подсчёта
+
+                if (matchesCount >= 2)
+                {
+                    MessageBox.Show("Эти команды уже играли между собой 2 или более раз. Добавление матча невозможно.");
+                    return;
+                }
+
                 var playerHistoryDb = PlayerHistoryDB.GetDb();
                 if (!playerHistoryDb.BothTeamsHaveEnoughPlayers(NewMatch.TeamId1, NewMatch.TeamId2, NewMatch.Date))
                 {
@@ -124,11 +150,13 @@ namespace Match_Analysis.VM
                 {
                     MatchDB.GetDb().Insert(NewMatch); // 💾 Сохраняем матч
                 }
+
                 var vm = new AddInfPlayer();
                 vm.InitializePlayers(NewMatch.Id, NewMatch.TeamScore1, SelectedMatch1, NewMatch.Date);
                 var window = new DobavInfPlayer { DataContext = vm };
                 vm.SetClose(window.Close);
                 window.ShowDialog();
+
             }, () =>
             SelectedMatch1 != null &&
             SelectedMatch2 != null &&
@@ -145,7 +173,20 @@ namespace Match_Analysis.VM
             {
                 NewMatch.TeamId1 = SelectedMatch1.Id;
                 NewMatch.TeamId2 = SelectedMatch2.Id;
-                
+
+                // Проверяем количество матчей между этими командами
+                int matchesCount = MatchDB.GetDb().CountMatchesBetweenTeams(NewMatch.TeamId1, NewMatch.TeamId2);
+
+                // Если матч новый (Id==0), то просто считаем. Если редактируем — исключаем текущий матч из подсчёта.
+                if (NewMatch.Id != 0)
+                    matchesCount--; // исключаем текущий матч из подсчёта
+
+                if (matchesCount >= 2)
+                {
+                    MessageBox.Show("Эти команды уже играли между собой 2 или более раз. Добавление матча невозможно.");
+                    return;
+                }
+
 
                 var playerHistoryDb = PlayerHistoryDB.GetDb();
                 if (!playerHistoryDb.BothTeamsHaveEnoughPlayers(NewMatch.TeamId1, NewMatch.TeamId2, NewMatch.Date))
@@ -158,11 +199,13 @@ namespace Match_Analysis.VM
                 {
                     MatchDB.GetDb().Insert(NewMatch); // 💾 Сохраняем матч
                 }
+
                 var vm = new AddInfPlayer();
                 vm.InitializePlayers(NewMatch.Id, NewMatch.TeamScore2, SelectedMatch2, NewMatch.Date);
                 var window = new DobavInfPlayer { DataContext = vm };
                 vm.SetClose(window.Close);
                 window.ShowDialog();
+
             }, () =>
             SelectedMatch1 != null &&
             SelectedMatch2 != null &&

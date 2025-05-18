@@ -50,7 +50,7 @@ namespace Match_Analysis.VM
 
         Action close;
 
-        internal void SetClose(Action close)
+        internal void SetClose(Action close)    
         {
             this.close = close;
         }

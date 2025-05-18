@@ -19,6 +19,8 @@ namespace Match_Analysis.Model
 
         public bool Insert(PlayerStatistics playerstatistics)
         {
+            MessageBox.Show("Insert: начало");
+
             bool result = false;
             if (connection == null)
                 return result;
@@ -42,7 +44,6 @@ namespace Match_Analysis.Model
                     checkCmd.Parameters.Add(new MySqlParameter("Assist", playerstatistics.Assist));
 
                     long count = (long)checkCmd.ExecuteScalar();
-
                     if (count > 0)
                     {
                         MessageBox.Show("Такая статистика уже существует для данного игрока и матча.");
@@ -180,6 +181,34 @@ namespace Match_Analysis.Model
             connection.CloseConnection();
             return result;
         }
+        public bool DeleteByMatchId(int matchId)
+        {
+            if (connection == null)
+                return false;
+
+            bool result = false;
+
+            if (connection.OpenConnection())
+            {
+                using var cmd = connection.CreateCommand("DELETE FROM player_statistics WHERE match_id = @matchId");
+                cmd.Parameters.AddWithValue("@matchId", matchId);
+
+                try
+                {
+                    result = cmd.ExecuteNonQuery() > 0;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+
+                connection.CloseConnection();
+            }
+
+            return result;
+        }
+
+
 
         static PlayerStatisticsDB db;
         public static PlayerStatisticsDB GetDb()

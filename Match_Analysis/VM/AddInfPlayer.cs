@@ -40,10 +40,10 @@ namespace Match_Analysis.VM
             return new ObservableCollection<Player>(validPlayers);
         }
 
-        private ObservableCollection<Player> selectedGoalPlayers = new();
+        private ObservableCollection<PlayerSelection> selectedGoalPlayers = new();
+        private ObservableCollection<PlayerSelection> selectedAssistPlayers = new();
 
-        private ObservableCollection<Player> selectedAssistPlayers = new();
-        public ObservableCollection<Player> SelectedGoalPlayers
+        public ObservableCollection<PlayerSelection> SelectedGoalPlayers
         {
             get => selectedGoalPlayers;
             set
@@ -53,7 +53,7 @@ namespace Match_Analysis.VM
             }
         }
 
-        public ObservableCollection<Player> SelectedAssistPlayers
+        public ObservableCollection<PlayerSelection> SelectedAssistPlayers
         {
             get => selectedAssistPlayers;
             set
@@ -93,8 +93,11 @@ namespace Match_Analysis.VM
 
             Players = GetPlayersInTeamAtDate(team, date);
 
-            SelectedGoalPlayers = new ObservableCollection<Player>(new Player[goals]);
-            SelectedAssistPlayers = new ObservableCollection<Player>(new Player[assists]);
+            SelectedGoalPlayers = new ObservableCollection<PlayerSelection>(
+                Enumerable.Range(0, goals).Select(i => new PlayerSelection(null)));
+
+            SelectedAssistPlayers = new ObservableCollection<PlayerSelection>(
+                Enumerable.Range(0, assists).Select(i => new PlayerSelection(null)));
 
             Signal(nameof(Players));
             Signal(nameof(SelectedGoalPlayers));
@@ -110,32 +113,66 @@ namespace Match_Analysis.VM
             SelectAll();
             AddPlayer = new CommandMvvm(() =>
             {
-                foreach (var player in SelectedGoalPlayers.Where(p => p != null))
+
+                foreach (var group in SelectedGoalPlayers
+                .Where(p => p.SelectedPlayer != null)
+                .GroupBy(p => p.SelectedPlayer.Id))
                 {
+                    int playerId = group.Key;
+                    int goals = group.Count();
+                    var player = Players.FirstOrDefault(p => p.Id == playerId);
+
                     PlayerStatistics stats = new()
                     {
-                        PlayerId = player.Id,
+                        PlayerId = playerId,
                         MatchId = MatchId,
-                        Goal = 1,
+                        Goal = goals,
                         Assist = 0
                     };
-                    PlayerStatisticsDB.GetDb().Insert(stats);
+
+                    bool inserted = PlayerStatisticsDB.GetDb().Insert(stats);
+
+                    if (!inserted)
+                    {
+                        MessageBox.Show($"Не удалось добавить статистику для игрока {player?.Surname ?? "неизвестен"}");
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Добавлена статистика: {player?.Surname} - {goals} гол(ов)");
+                    }
                 }
 
-                foreach (var player in SelectedAssistPlayers.Where(p => p != null))
+                foreach (var group in SelectedAssistPlayers
+                .Where(p => p.SelectedPlayer != null)
+                .GroupBy(p => p.SelectedPlayer.Id))
                 {
+                    int playerId = group.Key;
+                    int assists = group.Count();
+                    var player = Players.FirstOrDefault(p => p.Id == playerId);
+
                     PlayerStatistics stats = new()
                     {
-                        PlayerId = player.Id,
+                        PlayerId = playerId,
                         MatchId = MatchId,
                         Goal = 0,
-                        Assist = 1
+                        Assist = assists
                     };
-                    PlayerStatisticsDB.GetDb().Insert(stats);
+
+                    bool inserted = PlayerStatisticsDB.GetDb().Insert(stats);
+
+                    if (!inserted)
+                    {
+                        MessageBox.Show($"Не удалось добавить статистику для игрока {player?.Surname ?? "неизвестен"}");
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Добавлена статистика: {player?.Surname} - {assists} ассист(ов)");
+                    }
                 }
 
                 close?.Invoke();
 
+           
             }, () => true);
 
 

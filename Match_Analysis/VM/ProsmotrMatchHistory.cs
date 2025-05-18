@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Match_Analysis.VM
 {
@@ -21,8 +22,19 @@ namespace Match_Analysis.VM
                 Signal();
             }
         }
-
+        private Match selectedMatch;
+        public Match SelectedMatch
+        {
+            get => selectedMatch;
+            set
+            {
+                selectedMatch = value;
+                Signal();
+            }
+        }
         public CommandMvvm Vozvrat { get; set; }
+
+        public CommandMvvm RemoveHist { get; set; }
         public ProsmotrMatchHistory()
         {
             SelectAll();
@@ -33,6 +45,21 @@ namespace Match_Analysis.VM
                 close?.Invoke();
 
             }, () => true);
+
+
+           
+            RemoveHist = new CommandMvvm(() =>
+            {
+
+                var match = MessageBox.Show("Вы уверены что хотите удалить матч?", "Подтверждение", MessageBoxButton.YesNo);
+
+                if (match == MessageBoxResult.Yes)
+                {
+                    PlayerStatisticsDB.GetDb().DeleteByMatchId(SelectedMatch.Id);
+                    MatchDB.GetDb().Remove(SelectedMatch);
+                }
+                SelectAll();
+            }, () => SelectedMatch != null);
 
 
         }

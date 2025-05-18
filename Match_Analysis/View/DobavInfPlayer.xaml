@@ -7,101 +7,62 @@
         mc:Ignorable="d"
         Title="DobavInfPlayer" Height="400" Width="350">
     <Grid>
-
         <Grid.RowDefinitions>
-
-            <RowDefinition Height="10*"/>
-            <RowDefinition Height="40*"/>
-            <RowDefinition Height="40*"/>
-            <RowDefinition Height="10*"/>
-
+            <RowDefinition Height="10*" />
+            <RowDefinition Height="40*" />
+            <RowDefinition Height="40*" />
+            <RowDefinition Height="10*" />
         </Grid.RowDefinitions>
-
 
         <StackPanel Orientation="Horizontal" Grid.Row="0">
             <TextBlock Text="Название команды:" />
             <TextBlock Text="{Binding Team.Title}" Margin="5,0,0,0" Height="20" Width="Auto" VerticalAlignment="Top"/>
-        </StackPanel> 
+        </StackPanel>
 
-        
         <!-- Список игроков с голами -->
         <StackPanel Grid.Row="1">
-
             <StackPanel Orientation="Horizontal">
-                
-                <Label Content="Кто забил гол(ы,ов)"/>
-                <TextBlock Text="{Binding SelectedGoalPlayers.Count}" Margin="0,6,0,0"/>
-                
+                <Label Content="Кто забил гол(ы,ов)" />
+                <TextBlock Text="{Binding SelectedGoalPlayers.Count}" Margin="0,6,0,0" />
             </StackPanel>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto" Height="125">
-               
                 <ItemsControl ItemsSource="{Binding SelectedGoalPlayers}">
-               
                     <ItemsControl.ItemTemplate>
-                   
                         <DataTemplate>
-                    
                             <ComboBox
-                         
                                 ItemsSource="{Binding DataContext.Players, RelativeSource={RelativeSource AncestorType=Window}}"
-                         
-                                SelectedItem="{Binding ., Mode=TwoWay}"
-                          
+                                SelectedItem="{Binding SelectedPlayer, Mode=TwoWay}"
                                 DisplayMemberPath="Surname"
-                            
                                 Width="300" Margin="5" />
-                    
                         </DataTemplate>
-               
                     </ItemsControl.ItemTemplate>
-           
                 </ItemsControl>
-            
             </ScrollViewer>
-       
         </StackPanel>
 
         <!-- Список ассистов -->
         <StackPanel Grid.Row="2">
-
             <StackPanel Orientation="Horizontal">
-
-                <Label Content="Кто отдал голевой(ые) пас(ы)"/>
-                <TextBlock Text="{Binding SelectedAssistPlayers.Count}" Margin="0,6,0,0"/>
-
+                <Label Content="Кто отдал голевой(ые) пас(ы)" />
+                <TextBlock Text="{Binding SelectedAssistPlayers.Count}" Margin="0,6,0,0" />
             </StackPanel>
-          
-            <ScrollViewer  VerticalScrollBarVisibility="Auto" Height="125">
-            
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Height="125">
                 <ItemsControl ItemsSource="{Binding SelectedAssistPlayers}">
-                
                     <ItemsControl.ItemTemplate>
-                   
                         <DataTemplate>
-                       
-                            <ComboBox 
-                           
+                            <ComboBox
                                 ItemsSource="{Binding DataContext.Players, RelativeSource={RelativeSource AncestorType=Window}}"
-                           
-                                SelectedItem="{Binding ., Mode=TwoWay}"
-                          
+                                SelectedItem="{Binding SelectedPlayer, Mode=TwoWay}"
                                 DisplayMemberPath="Surname"
-                           
                                 Width="300" Margin="5" />
-                   
                         </DataTemplate>
-                
                     </ItemsControl.ItemTemplate>
-           
-               
                 </ItemsControl>
-           
             </ScrollViewer>
-            
         </StackPanel>
 
-        <Button Grid.Row="3" Width="300" Height="20" Content="Применить изменения" Command="{Binding AddPlayer}"/>
-
+        <Button Grid.Row="3" Width="300" Height="20" Content="Добавить статистику" Command="{Binding AddPlayer}" />
     </Grid>
 </Window>

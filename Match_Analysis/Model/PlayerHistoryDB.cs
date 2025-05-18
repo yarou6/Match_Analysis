@@ -44,7 +44,6 @@ namespace Match_Analysis.Model
                     checkCmd.Parameters.Add(new MySqlParameter("ReleaseDate", playerHistory.ReleaseDate));
 
                     long count = (long)checkCmd.ExecuteScalar();
-
                     if (count > 0)
                     {
                         // Уже существует — не вставляем
@@ -74,6 +73,7 @@ namespace Match_Analysis.Model
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
+
                 }
             }
 

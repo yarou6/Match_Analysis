@@ -23,8 +23,8 @@
         <ListView  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Matches}" SelectedItem="{Binding SelectedMatch}">
             <ListView.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Изменить матч" />
-                    <MenuItem Header="Удалить матч" />
+                    <MenuItem Header="Изменить историю" Command="{Binding EditHist}" />
+                    <MenuItem Header="Удалить историю" Command="{Binding RemoveHist}"/>
                 </ContextMenu>
             </ListView.ContextMenu>
             <ListView.View>

@@ -293,6 +293,16 @@ namespace Match_Analysis.Model
             return match;
         }
 
+        public int CountMatchesBetweenTeams(int teamId1, int teamId2)
+        {
+            var allMatches = SelectAll(); // Получаем все матчи из БД
+
+            // Считаем матчи, где команда 1 играет с командой 2 (в любом порядке)
+            return allMatches.Count(m =>
+                (m.TeamId1 == teamId1 && m.TeamId2 == teamId2) ||
+                (m.TeamId1 == teamId2 && m.TeamId2 == teamId1));
+        }
+
 
 
         static MatchDB db;

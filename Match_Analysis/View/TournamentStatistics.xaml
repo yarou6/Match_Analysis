@@ -21,31 +21,19 @@
 
         </Grid.RowDefinitions>
 
-        <ListView  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding}" SelectedItem="{Binding SelectedPlayer}">
-            <ListView.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Лист Книг" />
-                </ContextMenu>
-            </ListView.ContextMenu>
+        <ListView Grid.Row="1" ItemsSource="{Binding PlayersStats}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="ФИО" DisplayMemberBinding="{Binding FirstName}"/>
-                    <GridViewColumn Header="Голы" DisplayMemberBinding="{Binding FirstName}"/>
-                    <GridViewColumn Header="Голевые передачи" DisplayMemberBinding="{Binding FirstName}"/>
-                    <GridViewColumn Header="Название команды" DisplayMemberBinding="{Binding FirstName}"/>
+                    <GridViewColumn Header="ФИО" DisplayMemberBinding="{Binding FIO}"/>
+                    <GridViewColumn Header="Голы" DisplayMemberBinding="{Binding Goals}"/>
+                    <GridViewColumn Header="Голевые передачи" DisplayMemberBinding="{Binding Assists}"/>
+                    <GridViewColumn Header="Название команды" DisplayMemberBinding="{Binding TeamTitle}"/>
                 </GridView>
             </ListView.View>
         </ListView>
 
 
         <Button Width="100" HorizontalAlignment="Right" Command="{Binding Vozvrat}"/>
-
-
-
-
-
-
-
 
     </Grid>
 </Window>

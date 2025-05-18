@@ -61,7 +61,7 @@ namespace Match_Analysis.VM
         }
 
 
-        private Match selectedMatch;
+        
         private ObservableCollection<Match> matchs = new();
         public ObservableCollection<Match> Matchs
         {
@@ -72,20 +72,6 @@ namespace Match_Analysis.VM
                 Signal();
             }
         }
-
-        public Match SelectedMatch
-        {
-            get => selectedMatch;
-            set
-            {
-                selectedMatch = value;
-                Signal();
-            }
-        }
-
-
-
-
         
         private ObservableCollection<PlayerHistory> playerHistories = new();
         public ObservableCollection<PlayerHistory> PlayerHistories
