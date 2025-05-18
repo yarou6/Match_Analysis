@@ -26,11 +26,17 @@ namespace Match_Analysis.Model
             if (connection == null)
                 return result;
 
+            var playerHistoryDb = PlayerHistoryDB.GetDb();
+            if (!playerHistoryDb.BothTeamsHaveEnoughPlayers(match.TeamId1, match.TeamId2, match.Date))
+            {
+                MessageBox.Show("В обеих командах должно быть не менее 11 игроков на дату матча.");
+                return false; // не сохраняем
+            }
+
             if (connection.OpenConnection())
             {
                 MySqlCommand cmd = connection.CreateCommand("insert into `match` Values (0, @Date, @TeamScore1, @TeamScore2, @TeamId1, @TeamId2);select LAST_INSERT_ID();");
 
-                // путем добавления значений в запрос через параметры мы используем экранирование опасных символов
                 cmd.Parameters.Add(new MySqlParameter("Date", match.Date));
                 cmd.Parameters.Add(new MySqlParameter("TeamScore1", match.TeamScore1));
                 cmd.Parameters.Add(new MySqlParameter("TeamScore2", match.TeamScore2));
@@ -38,13 +44,9 @@ namespace Match_Analysis.Model
                 cmd.Parameters.Add(new MySqlParameter("TeamId2", match.TeamId2));
                 try
                 {
-                    // выполняем запрос через ExecuteScalar, получаем id вставленной записи
-                    // если нам не нужен id, то в запросе убираем часть select LAST_INSERT_ID(); и выполняем команду через ExecuteNonQuery
                     int id = (int)(ulong)cmd.ExecuteScalar();
                     if (id > 0)
                     {
-                        MessageBox.Show(id.ToString());
-                        // назначаем полученный id обратно в объект для дальнейшей работы
                         match.Id = id;
                         result = true;
                     }
@@ -57,8 +59,8 @@ namespace Match_Analysis.Model
                 {
                     MessageBox.Show(ex.Message);
                 }
+                connection.CloseConnection();
             }
-            connection.CloseConnection();
             return result;
         }
 
@@ -167,6 +169,13 @@ namespace Match_Analysis.Model
             if (connection == null)
                 return result;
 
+            var playerHistoryDb = PlayerHistoryDB.GetDb();
+            if (!playerHistoryDb.BothTeamsHaveEnoughPlayers(edit.TeamId1, edit.TeamId2, edit.Date))
+            {
+                MessageBox.Show("В обеих командах должно быть не менее 11 игроков на дату матча.");
+                return false; // не обновляем
+            }
+
             if (connection.OpenConnection())
             {
                 var mc = connection.CreateCommand($"update `match` set `date`=@date, `team_score1`=@team_score1, `team_score2`=@team_score2, `team_id1`=@team_id1, `team_id2`=@team_id2 where `id` = {edit.Id}");
@@ -185,8 +194,8 @@ namespace Match_Analysis.Model
                 {
                     MessageBox.Show(ex.Message);
                 }
+                connection.CloseConnection();
             }
-            connection.CloseConnection();
             return result;
         }
 
@@ -213,6 +222,78 @@ namespace Match_Analysis.Model
             connection.CloseConnection();
             return result;
         }
+        internal Match SelectById(int id)
+        {
+            Match match = null;
+            if (connection == null)
+                return null;
+
+            if (connection.OpenConnection())
+            {
+                var command = connection.CreateCommand("SELECT m.id, m.team_id1, m.team_id2, m.date, m.team_score1, m.team_score2, t.title, t.city, t.coach, t2.title, t2.city, t2.coach FROM `match` m JOIN team t ON m.team_id1 = t.id JOIN team t2 ON m.team_id2 = t2.id WHERE m.id = @id");
+                command.Parameters.Add(new MySqlParameter("id", id));
+
+                try
+                {
+                    var dr = command.ExecuteReader();
+                    if (dr.Read())
+                    {
+                        int matchId = dr.GetInt32(0);
+                        int team_id1 = dr.GetInt32(1);
+                        int team_id2 = dr.GetInt32(2);
+
+                        DateTime date = dr.IsDBNull(3) ? DateTime.MinValue : dr.GetDateTime(3);
+                        int team_score1 = dr.IsDBNull(4) ? 0 : dr.GetInt32(4);
+                        int team_score2 = dr.IsDBNull(5) ? 0 : dr.GetInt32(5);
+
+                        string title1 = dr.IsDBNull(6) ? string.Empty : dr.GetString(6);
+                        string city1 = dr.IsDBNull(7) ? string.Empty : dr.GetString(7);
+                        string coach1 = dr.IsDBNull(8) ? string.Empty : dr.GetString(8);
+
+                        string title2 = dr.IsDBNull(9) ? string.Empty : dr.GetString(9);
+                        string city2 = dr.IsDBNull(10) ? string.Empty : dr.GetString(10);
+                        string coach2 = dr.IsDBNull(11) ? string.Empty : dr.GetString(11);
+
+                        Team team1 = new Team
+                        {
+                            Id = team_id1,
+                            Title = title1,
+                            City = city1,
+                            Coach = coach1
+                        };
+
+                        Team team2 = new Team
+                        {
+                            Id = team_id2,
+                            Title = title2,
+                            City = city2,
+                            Coach = coach2
+                        };
+
+                        match = new Match
+                        {
+                            Id = matchId,
+                            TeamId1 = team_id1,
+                            TeamId2 = team_id2,
+                            Date = date,
+                            TeamScore1 = team_score1,
+                            TeamScore2 = team_score2,
+                            Team1 = team1,
+                            Team2 = team2
+                        };
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+
+            connection.CloseConnection();
+            return match;
+        }
+
+
 
         static MatchDB db;
         public static MatchDB GetDb()

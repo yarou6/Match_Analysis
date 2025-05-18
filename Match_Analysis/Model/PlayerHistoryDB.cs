@@ -339,6 +339,55 @@ namespace Match_Analysis.Model
             return result;
         }
 
+        public bool BothTeamsHaveEnoughPlayers(int teamId1, int teamId2, DateTime date)
+        {
+            if (connection == null)
+                return false;
+
+            bool result = false;
+
+            if (connection.OpenConnection())
+            {
+                try
+                {
+                    var cmd = connection.CreateCommand(@"
+                SELECT 
+                    (SELECT COUNT(*) FROM player_history 
+                     WHERE team_id = @TeamId1 
+                       AND entry_date <= @MatchDate 
+                       AND (release_date IS NULL OR release_date >= @MatchDate)) AS count1,
+                    (SELECT COUNT(*) FROM player_history 
+                     WHERE team_id = @TeamId2 
+                       AND entry_date <= @MatchDate 
+                       AND (release_date IS NULL OR release_date >= @MatchDate)) AS count2;
+            ");
+
+                    cmd.Parameters.Add(new MySqlParameter("TeamId1", teamId1));
+                    cmd.Parameters.Add(new MySqlParameter("TeamId2", teamId2));
+                    cmd.Parameters.Add(new MySqlParameter("MatchDate", date));
+
+                    using var reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        int count1 = reader.GetInt32("count1");
+                        int count2 = reader.GetInt32("count2");
+
+                        result = (count1 >= 11 && count2 >= 11);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                finally
+                {
+                    connection.CloseConnection();
+                }
+            }
+
+            return result;
+        }
+
         static PlayerHistoryDB db;
         public static PlayerHistoryDB GetDb()
         {

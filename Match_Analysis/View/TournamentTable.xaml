@@ -20,7 +20,7 @@
 
         </Grid.RowDefinitions>
 
-        <ListView  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Player}" SelectedItem="{Binding SelectedPlayer}">
+        <ListView  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding}" SelectedItem="{Binding SelectedPlayer}">
             <ListView.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Лист Книг" />

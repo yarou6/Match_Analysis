@@ -21,15 +21,20 @@ namespace Match_Analysis.VM
                 Signal();
             }
         }
-        public ObservableCollection<Player> GetPlayersInTeamAtDate(Team team, DateTime matchDate)
-        {
-            var allPlayers = PlayerDB.GetDb().SelectAll().Where(p => p.TeamId == team.Id);
 
-            // Допустим есть PlayerHistory с StartDate и EndDate для игрока
+
+        public ObservableCollection<Player> GetPlayersInTeamAtDate(Team team, DateTime date)
+        {
+            var allPlayers = PlayerDB.GetDb().SelectAll();
+
             var validPlayers = allPlayers.Where(p =>
             {
                 var histories = PlayerHistoryDB.GetDb().SelectPlayer(p.Id);
-                return histories.Any(h => h.TeamId == team.Id && h.EntryDate <= matchDate && (h.ReleaseDate == null || h.ReleaseDate >= matchDate));
+
+                return histories.Any(h =>
+                    h.TeamId == team.Id &&
+                    h.EntryDate <= date &&
+                    (h.ReleaseDate == null || h.ReleaseDate == DateTime.MinValue || h.ReleaseDate >= date));
             });
 
             return new ObservableCollection<Player>(validPlayers);
@@ -62,11 +67,12 @@ namespace Match_Analysis.VM
         public int GoalCount { get; set; }
         public int AssistCount { get; set; }
         public Team Team { get; private set; }
-        public void InitializePlayers(int matchId, int goals, Team team)
+        public void InitializePlayers(int matchId, int goals, Team team, DateTime date)
         {
             MatchId = matchId;
-
             GoalCount = goals;
+
+            var match = MatchDB.GetDb().SelectById(matchId);
 
             Random rand = new Random();
             int minAssists = 0;
@@ -85,7 +91,7 @@ namespace Match_Analysis.VM
 
             Team = team;
 
-            Players = new ObservableCollection<Player>(PlayerDB.GetDb().SelectAll().Where(p => p.TeamId == team.Id));
+            Players = GetPlayersInTeamAtDate(team, date);
 
             SelectedGoalPlayers = new ObservableCollection<Player>(new Player[goals]);
             SelectedAssistPlayers = new ObservableCollection<Player>(new Player[assists]);

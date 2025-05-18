@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using Match_Analysis.Model;
@@ -13,9 +14,9 @@ namespace Match_Analysis.VM
     internal class AddEditMatch : BaseVM
     {
 
-        private Match newMatch = new();
+        private Match_Analysis.Model.Match newMatch = new();
 
-        public Match NewMatch
+        public Match_Analysis.Model.Match NewMatch
         {
             get => newMatch;
             set
@@ -57,8 +58,8 @@ namespace Match_Analysis.VM
             }
         }
 
-        private ObservableCollection<Match> matches = new();
-        public ObservableCollection<Match> Matches
+        private ObservableCollection<Match_Analysis.Model.Match> matches = new();
+        public ObservableCollection<Match_Analysis.Model.Match> Matches
         {
             get => matches;
             set
@@ -80,6 +81,14 @@ namespace Match_Analysis.VM
             {
                 NewMatch.TeamId1 = SelectedMatch1.Id;
                 NewMatch.TeamId2 = SelectedMatch2.Id;
+                
+                var playerHistoryDb = PlayerHistoryDB.GetDb();
+                if (!playerHistoryDb.BothTeamsHaveEnoughPlayers(NewMatch.TeamId1, NewMatch.TeamId2, NewMatch.Date))
+                {
+                    MessageBox.Show("В обеих командах должно быть не менее 11 игроков на дату матча.");
+                    return; // Прервать сохранение
+                }
+                
 
                 if (NewMatch.Id == 0)
                     MatchDB.GetDb().Insert(NewMatch);
@@ -100,14 +109,23 @@ namespace Match_Analysis.VM
 
             AddInf1 = new CommandMvvm(() =>
             {
+               
+                NewMatch.TeamId1 = SelectedMatch1.Id;
+                NewMatch.TeamId2 = SelectedMatch2.Id;
+
+                var playerHistoryDb = PlayerHistoryDB.GetDb();
+                if (!playerHistoryDb.BothTeamsHaveEnoughPlayers(NewMatch.TeamId1, NewMatch.TeamId2, NewMatch.Date))
+                {
+                    MessageBox.Show("В обеих командах должно быть не менее 11 игроков на дату матча.");
+                    return; // Прервать сохранение
+                }
+
                 if (NewMatch.Id == 0)
                 {
-                    NewMatch.TeamId1 = SelectedMatch1.Id;
-                    NewMatch.TeamId2 = SelectedMatch2.Id;
                     MatchDB.GetDb().Insert(NewMatch); // 💾 Сохраняем матч
                 }
                 var vm = new AddInfPlayer();
-                vm.InitializePlayers(NewMatch.Id, NewMatch.TeamScore1, SelectedMatch1);
+                vm.InitializePlayers(NewMatch.Id, NewMatch.TeamScore1, SelectedMatch1, NewMatch.Date);
                 var window = new DobavInfPlayer { DataContext = vm };
                 vm.SetClose(window.Close);
                 window.ShowDialog();
@@ -125,14 +143,23 @@ namespace Match_Analysis.VM
 
             AddInf2 = new CommandMvvm(() =>
             {
+                NewMatch.TeamId1 = SelectedMatch1.Id;
+                NewMatch.TeamId2 = SelectedMatch2.Id;
+                
+
+                var playerHistoryDb = PlayerHistoryDB.GetDb();
+                if (!playerHistoryDb.BothTeamsHaveEnoughPlayers(NewMatch.TeamId1, NewMatch.TeamId2, NewMatch.Date))
+                {
+                    MessageBox.Show("В обеих командах должно быть не менее 11 игроков на дату матча.");
+                    return; // Прервать сохранение
+                }
+
                 if (NewMatch.Id == 0)
                 {
-                    NewMatch.TeamId1 = SelectedMatch1.Id;
-                    NewMatch.TeamId2 = SelectedMatch2.Id;
                     MatchDB.GetDb().Insert(NewMatch); // 💾 Сохраняем матч
                 }
                 var vm = new AddInfPlayer();
-                vm.InitializePlayers(NewMatch.Id, NewMatch.TeamScore2, SelectedMatch2);
+                vm.InitializePlayers(NewMatch.Id, NewMatch.TeamScore2, SelectedMatch2, NewMatch.Date);
                 var window = new DobavInfPlayer { DataContext = vm };
                 vm.SetClose(window.Close);
                 window.ShowDialog();
@@ -147,7 +174,7 @@ namespace Match_Analysis.VM
 
         }
 
-        public void SetMatch(Match selectedMatch)
+        public void SetMatch(Match_Analysis.Model.Match selectedMatch)
         {
             NewMatch = selectedMatch;
         }
@@ -164,7 +191,7 @@ namespace Match_Analysis.VM
         private void SelectAll()
         {
             Teams = new List<Team>(TeamDB.GetDb().SelectAll());
-            Matches = new ObservableCollection<Match>(MatchDB.GetDb().SelectAll());
+            Matches = new ObservableCollection<Match_Analysis.Model.Match>(MatchDB.GetDb().SelectAll());
         }
     }
 }
