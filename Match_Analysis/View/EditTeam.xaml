@@ -7,7 +7,7 @@
         xmlns:mvvm="clr-namespace:Match_Analysis.VM"
         DataContext="{DynamicResource vm}"
         mc:Ignorable="d"
-        Title="EditTeam" Height="215" Width="350">
+        Title="EditTeam" Height="215" Width="350" MaxHeight="215" MaxWidth="350" MinHeight="215" MinWidth="350">
     <Window.Resources>
         <mvvm:AddEditTeam x:Key="vm"/>
     </Window.Resources>

@@ -5,23 +5,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Match_Analysis.View"
         xmlns:mvvm="clr-namespace:Match_Analysis.VM"
+        xmlns:localEnums="clr-namespace:Match_Analysis.VM"
         DataContext="{DynamicResource vm}"
         mc:Ignorable="d"
-        Title="TournamentStatistics" Height="450" Width="800">
+        Title="TournamentStatistics" Height="450" Width="800" MaxHeight="450" MaxWidth="800" MinHeight="450" MinWidth="800">
     <Window.Resources>
         <mvvm:ProsmotrTournStat x:Key="vm"/>
     </Window.Resources>
     <Grid>
-
-
+        
         <Grid.RowDefinitions>
-
-            <RowDefinition Height="7*"/>
-            <RowDefinition Height="98*"/>
-
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <ListView Grid.Row="1" ItemsSource="{Binding PlayersStats}">
+        <!-- ✅ ComboBox для выбора типа статистики -->
+        <ComboBox Grid.Row="0"
+                  Margin="10"
+                  Width="150"
+                  HorizontalAlignment="Left"
+                  SelectedItem="{Binding SelectedStatType, Mode=TwoWay}">
+            <ComboBox.ItemsSource>
+                <x:Array Type="{x:Type localEnums:StatType}">
+                    <localEnums:StatType>Goals</localEnums:StatType>
+                    <localEnums:StatType>Assists</localEnums:StatType>
+                </x:Array>
+            </ComboBox.ItemsSource>
+        </ComboBox>
+
+        <!-- 📋 Таблица -->
+        <ListView Grid.Row="1" ItemsSource="{Binding PlayersStats}" Margin="10">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ФИО" DisplayMemberBinding="{Binding FIO}"/>
@@ -32,8 +45,8 @@
             </ListView.View>
         </ListView>
 
-
-        <Button Width="100" HorizontalAlignment="Right" Command="{Binding Vozvrat}"/>
-
+        <!-- 🔙 Кнопка возврата -->
+        <Button Grid.Row="0" Width="100" HorizontalAlignment="Right" Margin="10"
+                Content="Назад" Command="{Binding Vozvrat}"/>
     </Grid>
 </Window>

@@ -7,7 +7,7 @@
         xmlns:mvvm="clr-namespace:Match_Analysis.VM"
         DataContext="{DynamicResource vm}"
         mc:Ignorable="d"
-        Title="PlayerStat" Height="450" Width="800">
+        Title="PlayerStat" Height="450" Width="800" MaxHeight="450" MaxWidth="800" MinHeight="450" MinWidth="800">
     <Window.Resources>
         <mvvm:ProsmotrPlayerStat x:Key="vm"/>
     </Window.Resources>
@@ -34,7 +34,8 @@
         </ListView>
 
 
-        <Button Width="150" Height="30" HorizontalAlignment="Right" Grid.Row="0" Command="{Binding Vozvrat}"/>
+        <Button Grid.Row="0" Width="100" HorizontalAlignment="Right" Margin="10"
+                Content="Назад" Command="{Binding Vozvrat}"/>
 
     </Grid>
 </Window>

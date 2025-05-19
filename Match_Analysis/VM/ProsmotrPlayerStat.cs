@@ -77,36 +77,49 @@ namespace Match_Analysis.VM
                         .Where(s => s.PlayerId == SelectedPlayer.Id)
                         .ToList();
 
-            var result = new List<PlayerTeamStats>();
+            var teamStatsDict = new Dictionary<int, PlayerTeamStats>();
 
-            foreach (var history in histories)
+            foreach (var stat in stats)
             {
-                var team = allTeams.FirstOrDefault(t => t.Id == history.TeamId);
-                if (team == null) continue;
+                var match = allMatches.FirstOrDefault(m => m.Id == stat.MatchId);
+                if (match == null)
+                    continue;
 
-                // Находим матчи этой команды
-                var matches = allMatches.Where(m => m.TeamId1 == team.Id || m.TeamId2 == team.Id).ToList();
+                var matchDate = match.Date;
 
-                // Получаем статистику игрока по найденным матчам
-                var goals = 0;
-                var assists = 0;
+                // Определяем команду игрока на дату матча
+                var historyForMatch = histories
+                .OrderByDescending(h => h.EntryDate)
+                .FirstOrDefault(h =>
+                 h.EntryDate <= matchDate &&
+                (h.ReleaseDate == null || h.ReleaseDate == DateTime.MinValue || h.ReleaseDate >= matchDate));
 
-                foreach (var match in matches)
+                if (historyForMatch == null)
+                    continue; // Игрок не был в команде на дату матча (редкий кейс)
+
+                if (historyForMatch == null || historyForMatch.TeamId == null)
+                    continue;
+                int teamId = historyForMatch.TeamId.Value;
+
+                if (!teamStatsDict.ContainsKey(teamId))
                 {
-                    var playerStats = stats.Where(s => s.MatchId == match.Id);
-                    goals += playerStats.Sum(s => s.Goal);
-                    assists += playerStats.Sum(s => s.Assist);
+                    var team = allTeams.FirstOrDefault(t => t.Id == teamId);
+                    if (team == null) continue;
+
+                    teamStatsDict[teamId] = new PlayerTeamStats
+                    {
+                        TeamName = team.Title,
+                        Goals = 0,
+                        Assists = 0
+                    };
                 }
 
-                result.Add(new PlayerTeamStats
-                {
-                    TeamName = team.Title,
-                    Goals = goals,
-                    Assists = assists
-                });
+                teamStatsDict[teamId].Goals += stat.Goal;
+                teamStatsDict[teamId].Assists += stat.Assist;
             }
 
-            PlayerTeamStats = new ObservableCollection<PlayerTeamStats>(result);
+            PlayerTeamStats = new ObservableCollection<PlayerTeamStats>(teamStatsDict.Values);
         }
+
     }
 }

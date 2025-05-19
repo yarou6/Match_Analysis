@@ -34,6 +34,8 @@ namespace Match_Analysis.Model
         {
             if (_connection == null)
                 Config();
+            else if(_connection.State == System.Data.ConnectionState.Open)
+                return true;
             try
             {
                 _connection.Open();

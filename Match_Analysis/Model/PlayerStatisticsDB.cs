@@ -19,7 +19,6 @@ namespace Match_Analysis.Model
 
         public bool Insert(PlayerStatistics playerstatistics)
         {
-            MessageBox.Show("Insert: начало");
 
             bool result = false;
             if (connection == null)

@@ -7,17 +7,15 @@
         xmlns:mvvm="clr-namespace:Match_Analysis.VM"
         DataContext="{DynamicResource vm}"
         mc:Ignorable="d"
-        Title="MatchHistory" Height="350" Width="600">
+        Title="MatchHistory" Height="350" Width="600" MaxHeight="350" MaxWidth="600" MinHeight="350" MinWidth="600">
     <Window.Resources>
         <mvvm:ProsmotrMatchHistory x:Key="vm"/>
     </Window.Resources>
     <Grid>
 
         <Grid.RowDefinitions>
-
-            <RowDefinition Height="7*"/>
-            <RowDefinition Height="98*"/>
-
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <ListView  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Matches}" SelectedItem="{Binding SelectedMatch}">
@@ -45,7 +43,8 @@
         </ListView>
 
 
-        <Button Width="100" HorizontalAlignment="Right" Command="{Binding Vozvrat}"/>
+        <Button Grid.Row="0" Width="100" HorizontalAlignment="Right" Margin="5"
+                Content="Назад" Command="{Binding Vozvrat}"/>
 
     </Grid>
 </Window>

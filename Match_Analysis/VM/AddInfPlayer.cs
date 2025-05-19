@@ -113,10 +113,79 @@ namespace Match_Analysis.VM
             SelectAll();
             AddPlayer = new CommandMvvm(() =>
             {
+                if (SelectedGoalPlayers.Any(p => p.SelectedPlayer == null) || SelectedAssistPlayers.Any(p => p.SelectedPlayer == null))
+                {
+                    MessageBox.Show("Пожалуйста, заполните все поля выбора игроков.");
+                    return;
+                }
+                var validPlayersAtMatchDate = GetPlayersInTeamAtDate(Team, MatchDB.GetDb().SelectById(MatchId).Date);
 
+                var validPlayerIds = validPlayersAtMatchDate.Select(p => p.Id).ToHashSet();
+
+                var goalPlayerIds = SelectedGoalPlayers.Where(p => p.SelectedPlayer != null).Select(p => p.SelectedPlayer.Id).ToHashSet();
+                var assistPlayerIds = SelectedAssistPlayers.Where(p => p.SelectedPlayer != null).Select(p => p.SelectedPlayer.Id).ToHashSet();
+
+                // Проверка, что все игроки принадлежат команде в дату матча
+                var invalidGoalPlayers = goalPlayerIds.Except(validPlayerIds).ToList();
+                var invalidAssistPlayers = assistPlayerIds.Except(validPlayerIds).ToList();
+
+                if (invalidGoalPlayers.Any() || invalidAssistPlayers.Any())
+                {
+                    MessageBox.Show("Некоторые игроки не состоят в команде на дату матча. Исправьте выбор.");
+                    return;
+                }
+
+                var goalsPerPlayer = SelectedGoalPlayers
+         .Where(p => p.SelectedPlayer != null)
+         .GroupBy(p => p.SelectedPlayer.Id)
+         .ToDictionary(g => g.Key, g => g.Count());
+
+                // Считаем количество ассистов на игрока
+                var assistsPerPlayer = SelectedAssistPlayers
+                    .Where(p => p.SelectedPlayer != null)
+                    .GroupBy(p => p.SelectedPlayer.Id)
+                    .ToDictionary(g => g.Key, g => g.Count());
+
+                // Общие голы команды
+                int totalGoals = SelectedGoalPlayers.Count;
+
+                // Проверяем ограничения ассистов по игрокам
+                foreach (var playerId in assistsPerPlayer.Keys)
+                {
+                    int assists = assistsPerPlayer[playerId];
+                    goalsPerPlayer.TryGetValue(playerId, out int playerGoals);
+
+                    // Правила, например:
+                    //  - ассистов у игрока не может быть больше 2, если у него 3 гола
+                    //  - ассистов не может быть больше (общее количество голов команды - голов игрока)
+                    if (playerGoals >= 3 && assists > 2)
+                    {
+                        MessageBox.Show($"Игрок с ID {playerId} не может иметь больше 2 ассистов при 3 и более голах.");
+                        return;
+                    }
+
+                    int maxAssistsByTeam = totalGoals - playerGoals;
+                    if (assists > maxAssistsByTeam)
+                    {
+                        MessageBox.Show($"Игрок с ID {playerId} не может иметь больше ассистов ({assists}), чем голов команды без его голов ({maxAssistsByTeam}).");
+                        return;
+                    }
+                }
+
+                // Проверка суммарных ассистов: не больше количества голов команды
+                int totalAssists = SelectedAssistPlayers.Count;
+                if (totalAssists > totalGoals)
+                {
+                    MessageBox.Show("Общее количество ассистов не может превышать количество голов команды.");
+                    return;
+                }
+
+                // Если проверки пройдены — сохраняем статистику
+
+                // Сохраняем голы
                 foreach (var group in SelectedGoalPlayers
-                .Where(p => p.SelectedPlayer != null)
-                .GroupBy(p => p.SelectedPlayer.Id))
+                    .Where(p => p.SelectedPlayer != null)
+                    .GroupBy(p => p.SelectedPlayer.Id))
                 {
                     int playerId = group.Key;
                     int goals = group.Count();
@@ -142,9 +211,10 @@ namespace Match_Analysis.VM
                     }
                 }
 
+                // Сохраняем ассисты
                 foreach (var group in SelectedAssistPlayers
-                .Where(p => p.SelectedPlayer != null)
-                .GroupBy(p => p.SelectedPlayer.Id))
+                    .Where(p => p.SelectedPlayer != null)
+                    .GroupBy(p => p.SelectedPlayer.Id))
                 {
                     int playerId = group.Key;
                     int assists = group.Count();
@@ -172,7 +242,7 @@ namespace Match_Analysis.VM
 
                 close?.Invoke();
 
-           
+
             }, () => true);
 
 
