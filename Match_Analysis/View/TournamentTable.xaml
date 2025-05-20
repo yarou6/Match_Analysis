@@ -18,25 +18,18 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <ListView  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding}">
-            <ListView.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Лист Книг" />
-                </ContextMenu>
-            </ListView.ContextMenu>
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Название команды" DisplayMemberBinding="{Binding }"/>
-                    <GridViewColumn Header="Сыграно матчей" DisplayMemberBinding="{Binding }"/>
-                    <GridViewColumn Header="Победы" DisplayMemberBinding="{Binding }"/>
-                    <GridViewColumn Header="Ничьи" DisplayMemberBinding="{Binding }"/>
-                    <GridViewColumn Header="Поражения" DisplayMemberBinding="{Binding }"/>
-                    <GridViewColumn Header="Очки" DisplayMemberBinding="{Binding }"/>
-                    <GridViewColumn Header="Забито голов" DisplayMemberBinding="{Binding }"/>
-                    <GridViewColumn Header="Пропущено голов" DisplayMemberBinding="{Binding }"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <DataGrid ItemsSource="{Binding TournamentTable}" AutoGenerateColumns="False" Grid.Row="1">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Команда" Binding="{Binding Team.Title}" />
+                <DataGridTextColumn Header="Матчи" Binding="{Binding Matches}" />
+                <DataGridTextColumn Header="Победы" Binding="{Binding Wins}" />
+                <DataGridTextColumn Header="Ничьи" Binding="{Binding Draws}" />
+                <DataGridTextColumn Header="Поражения" Binding="{Binding Losses}" />
+                <DataGridTextColumn Header="Забито" Binding="{Binding GoalsFor}" />
+                <DataGridTextColumn Header="Пропущено" Binding="{Binding GoalsAgainst}" />
+                <DataGridTextColumn Header="Очки" Binding="{Binding Points}" />
+            </DataGrid.Columns>
+        </DataGrid>
 
 
         <Button Grid.Row="0" Width="100" HorizontalAlignment="Right" Margin="10"
