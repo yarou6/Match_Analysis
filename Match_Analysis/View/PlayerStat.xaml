@@ -23,12 +23,15 @@
                   DisplayMemberPath="FIO"/>
 
         <ListView Grid.Row="1" Margin="10"
-                  ItemsSource="{Binding PlayerTeamStats}">
+          ItemsSource="{Binding PlayerTeamStats}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Команда" DisplayMemberBinding="{Binding TeamName}"/>
-                    <GridViewColumn Header="Голы" DisplayMemberBinding="{Binding Goals}"/>
-                    <GridViewColumn Header="Голевые передачи" DisplayMemberBinding="{Binding Assists}"/>
+                    <GridViewColumn Header="Команда" DisplayMemberBinding="{Binding TeamName}" />
+                    <GridViewColumn Header="Голы" DisplayMemberBinding="{Binding Goals}" />
+                    <GridViewColumn Header="Гол.Пас" DisplayMemberBinding="{Binding Assists}" />
+                    <GridViewColumn Header="Гол + Пас" DisplayMemberBinding="{Binding Total}" />
+                    <GridViewColumn Header="Дата входа" DisplayMemberBinding="{Binding EntryDateString}" />
+                    <GridViewColumn Header="Дата выхода" DisplayMemberBinding="{Binding ReleaseDateString}" />
                 </GridView>
             </ListView.View>
         </ListView>

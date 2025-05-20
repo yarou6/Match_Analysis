@@ -13,6 +13,12 @@ namespace Match_Analysis.VM
         public string TeamName { get; set; }
         public int Goals { get; set; }
         public int Assists { get; set; }
+        public int Total => Goals + Assists; // Голы + пас
+        public DateTime? EntryDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
+
+        public string EntryDateString => EntryDate?.ToShortDateString();
+        public string ReleaseDateString => ReleaseDate?.ToShortDateString() ?? "По настоящее время";
     }
 
     internal class ProsmotrPlayerStat : BaseVM
@@ -89,16 +95,14 @@ namespace Match_Analysis.VM
 
                 // Определяем команду игрока на дату матча
                 var historyForMatch = histories
-                .OrderByDescending(h => h.EntryDate)
-                .FirstOrDefault(h =>
-                 h.EntryDate <= matchDate &&
-                (h.ReleaseDate == null || h.ReleaseDate == DateTime.MinValue || h.ReleaseDate >= matchDate));
-
-                if (historyForMatch == null)
-                    continue; // Игрок не был в команде на дату матча (редкий кейс)
+                    .OrderByDescending(h => h.EntryDate)
+                    .FirstOrDefault(h =>
+                        h.EntryDate <= matchDate &&
+                        (h.ReleaseDate == null || h.ReleaseDate == DateTime.MinValue || h.ReleaseDate >= matchDate));
 
                 if (historyForMatch == null || historyForMatch.TeamId == null)
                     continue;
+
                 int teamId = historyForMatch.TeamId.Value;
 
                 if (!teamStatsDict.ContainsKey(teamId))
@@ -110,7 +114,9 @@ namespace Match_Analysis.VM
                     {
                         TeamName = team.Title,
                         Goals = 0,
-                        Assists = 0
+                        Assists = 0,
+                        EntryDate = historyForMatch.EntryDate,
+                        ReleaseDate = historyForMatch.ReleaseDate
                     };
                 }
 

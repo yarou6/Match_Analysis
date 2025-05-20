@@ -12,7 +12,8 @@ namespace Match_Analysis.VM
     public enum StatType
     {
         Goals,
-        Assists
+        Assists,
+        Total
     }
     internal class ProsmotrTournStat:  BaseVM
     {
@@ -29,16 +30,33 @@ namespace Match_Analysis.VM
         }
         private void SortStats()
         {
-            var sorted = selectedStatType == StatType.Goals
-                ? PlayersStats.OrderByDescending(p => p.Goals)
-                              .ThenBy(p => p.FIO)
-                              .ThenBy(p => p.TeamTitle)
-                : PlayersStats.OrderByDescending(p => p.Assists)
-                              .ThenBy(p => p.FIO)
-                              .ThenBy(p => p.TeamTitle);
+            IEnumerable<PlayerStatView> sorted;
+
+            if (selectedStatType == StatType.Goals)
+            {
+                sorted = PlayersStats.OrderByDescending(p => p.Goals)
+                                     .ThenBy(p => p.FIO)
+                                     .ThenBy(p => p.TeamTitle);
+            }
+            else if (selectedStatType == StatType.Assists)
+            {
+                sorted = PlayersStats.OrderByDescending(p => p.Assists)
+                                     .ThenBy(p => p.FIO)
+                                     .ThenBy(p => p.TeamTitle);
+            }
+            else if (selectedStatType == StatType.Total)
+            {
+                sorted = PlayersStats.OrderByDescending(p => p.Goals + p.Assists)
+                                     .ThenBy(p => p.FIO)
+                                     .ThenBy(p => p.TeamTitle);
+            }
+            else
+            {
+                sorted = PlayersStats;
+            }
 
             PlayersStats = new ObservableCollection<PlayerStatView>(sorted);
-            Signal(nameof(PlayersStats));
+            Signal(nameof(PlayersStats)); ;
         }
         public ObservableCollection<PlayerStatView> PlayersStats { get; set; } = new();
 

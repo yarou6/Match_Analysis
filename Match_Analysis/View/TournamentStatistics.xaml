@@ -29,6 +29,7 @@
                 <x:Array Type="{x:Type localEnums:StatType}">
                     <localEnums:StatType>Goals</localEnums:StatType>
                     <localEnums:StatType>Assists</localEnums:StatType>
+                    <localEnums:StatType>Total</localEnums:StatType>
                 </x:Array>
             </ComboBox.ItemsSource>
         </ComboBox>
@@ -37,10 +38,11 @@
         <ListView Grid.Row="1" ItemsSource="{Binding PlayersStats}" Margin="10">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="ФИО" DisplayMemberBinding="{Binding FIO}"/>
-                    <GridViewColumn Header="Голы" DisplayMemberBinding="{Binding Goals}"/>
-                    <GridViewColumn Header="Голевые передачи" DisplayMemberBinding="{Binding Assists}"/>
-                    <GridViewColumn Header="Название команды" DisplayMemberBinding="{Binding TeamTitle}"/>
+                    <GridViewColumn Header="ФИО" DisplayMemberBinding="{Binding FIO}" />
+                    <GridViewColumn Header="Голы" DisplayMemberBinding="{Binding Goals}" />
+                    <GridViewColumn Header="Гол.Пас" DisplayMemberBinding="{Binding Assists}" />
+                    <GridViewColumn Header="Гол+Пас" DisplayMemberBinding="{Binding Total}" />
+                    <GridViewColumn Header="Название команды" DisplayMemberBinding="{Binding TeamTitle}" />
                 </GridView>
             </ListView.View>
         </ListView>

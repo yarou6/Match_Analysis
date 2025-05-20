@@ -12,5 +12,6 @@ namespace Match_Analysis.Model
         public int Goals { get; set; }
         public int Assists { get; set; }
         public string TeamTitle { get; set; }
+        public int Total => Goals + Assists; // ✅ Голы + Пас
     }
 }
