@@ -17,8 +17,15 @@ namespace Match_Analysis.VM
         public DateTime? EntryDate { get; set; }
         public DateTime? ReleaseDate { get; set; }
 
-        public string EntryDateString => EntryDate?.ToShortDateString();
-        public string ReleaseDateString => ReleaseDate?.ToShortDateString() ?? "По настоящее время";
+        // Обработка EntryDate с учётом MinValue
+        public string EntryDateString => EntryDate != null && EntryDate != DateTime.MinValue ?
+                                          EntryDate.Value.ToShortDateString() :
+                                          "";
+
+        // Обработка ReleaseDate с учётом MinValue
+        public string ReleaseDateString => ReleaseDate != null && ReleaseDate != DateTime.MinValue ?
+                                           ReleaseDate.Value.ToShortDateString() :
+                                           "По настоящее время";
     }
 
     internal class ProsmotrPlayerStat : BaseVM
@@ -123,8 +130,29 @@ namespace Match_Analysis.VM
                 teamStatsDict[teamId].Goals += stat.Goal;
                 teamStatsDict[teamId].Assists += stat.Assist;
             }
+            foreach (var history in histories)
+            {
+                if (history.TeamId == null) continue;
 
-            PlayerTeamStats = new ObservableCollection<PlayerTeamStats>(teamStatsDict.Values);
+                int teamId = history.TeamId.Value;
+
+                // Проверяем, существует ли команда в словаре
+                if (!teamStatsDict.ContainsKey(teamId))
+                {
+                    var team = allTeams.FirstOrDefault(t => t.Id == teamId);
+                    if (team == null) continue;
+
+                    teamStatsDict[teamId] = new PlayerTeamStats
+                    {
+                        TeamName = team.Title,
+                        Goals = 0, // Устанавливаем 0, если нет голов
+                        Assists = 0, // Устанавливаем 0, если нет передач
+                        EntryDate = history.EntryDate,
+                        ReleaseDate = history.ReleaseDate
+                    };
+                }
+            }
+                PlayerTeamStats = new ObservableCollection<PlayerTeamStats>(teamStatsDict.Values);
         }
 
     }
