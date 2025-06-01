@@ -37,7 +37,7 @@
             <TextBlock Text="Отчество" Margin="17,10,0,0"/>
             <TextBox Text="{Binding Patronymic, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Width="300" Height="20" HorizontalAlignment="Center" DataContext="{Binding NewPlayer}"/>
 
-            <TextBlock Text="Возвраст" Margin="17,10,0,0"/>
+            <TextBlock Text="Возраст" Margin="17,10,0,0"/>
             <TextBox Text="{Binding Age, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Width="300" Height="20" HorizontalAlignment="Center"  DataContext="{Binding NewPlayer}"/>
 
             <TextBlock Text="Позиция игрока" Margin="17,10,0,0"/>

@@ -77,7 +77,7 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ФИО" DisplayMemberBinding="{Binding FIO}" Width="Auto"/>
-                    <GridViewColumn Header="Возвраст" DisplayMemberBinding="{Binding Age}" Width="Auto"/>
+                    <GridViewColumn Header="Возраст" DisplayMemberBinding="{Binding Age}" Width="Auto"/>
                     <GridViewColumn Header="Позиция" DisplayMemberBinding="{Binding PlayerPosition}" Width="Auto"/>
                     <GridViewColumn Header="Команда" Width="Auto">
                         <GridViewColumn.CellTemplate>
