@@ -8,11 +8,33 @@ using System.Windows;
 using Match_Analysis.Model;
 using Match_Analysis.VM;
 using Match_Analysis.View;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Match_Analysis.VM
 {
     internal class MainVM : BaseVM
     {
+
+        private string search;
+
+        public string Search
+        {
+
+            get => search;
+            set
+            {
+                search = value;
+                if (string.IsNullOrWhiteSpace(search))
+                {
+                    SelectAll(); // верни всех
+                }
+                else
+                {
+                    SearchPlayers(search);
+                }
+                Signal(); 
+            }
+        }
 
         private Team selectedteam;
         private ObservableCollection<Team> teams = new();
@@ -226,6 +248,10 @@ namespace Match_Analysis.VM
         {
             Teams = new ObservableCollection<Team>(TeamDB.GetDb().SelectAll());
             Players = new ObservableCollection<Player>(PlayerDB.GetDb().SelectAll());
+        }
+        private void SearchPlayers(string search)
+        {
+            Players = new ObservableCollection<Player>(SearchPlayer.GetTable().SearchPlayers(search));
         }
 
     }
