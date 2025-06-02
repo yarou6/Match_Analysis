@@ -80,8 +80,8 @@
                     <GridViewColumn Header="Возраст" DisplayMemberBinding="{Binding Age}" Width="Auto"/>
                     <GridViewColumn Header="Позиция" DisplayMemberBinding="{Binding PlayerPosition}" Width="Auto"/>
                     <GridViewColumn Header="Команда" Width="Auto">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
+                        <GridViewColumn.CellTemplate >
+                            <DataTemplate >
                                 <TextBlock Text="{Binding Team, Converter={StaticResource TeamTitleConverter}}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>

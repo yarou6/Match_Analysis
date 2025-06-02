@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mvvm="clr-namespace:Match_Analysis.VM"
         mc:Ignorable="d"
-        Title="DobavInfPlayer" Height="400" Width="350" MaxHeight="400" MaxWidth="350" MinHeight="400" MinWidth="350">
+        Title="Добавление/Изменение статистики" Height="400" Width="350" MaxHeight="400" MaxWidth="350" MinHeight="400" MinWidth="350">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="10*" />

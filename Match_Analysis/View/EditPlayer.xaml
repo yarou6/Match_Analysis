@@ -8,7 +8,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         DataContext="{DynamicResource vm}"
         mc:Ignorable="d"
-        Title="EditPlayer" Height="400" Width="350" MaxHeight="400" MinHeight="400" MaxWidth="350" MinWidth="350">
+        Title="Добавление/Изменение игрока" Height="400" Width="350" MaxHeight="400" MinHeight="400" MaxWidth="350" MinWidth="350">
     <Window.Resources>
         <mvvm:AddEditPlayer x:Key="vm"/>
     </Window.Resources>

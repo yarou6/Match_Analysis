@@ -8,7 +8,7 @@
         xmlns:localEnums="clr-namespace:Match_Analysis.VM"
         DataContext="{DynamicResource vm}"
         mc:Ignorable="d"
-        Title="TournamentStatistics" Height="450" Width="800" MaxHeight="450" MaxWidth="800" MinHeight="450" MinWidth="800">
+        Title="Турнирная статистика" Height="450" Width="800" MaxHeight="450" MaxWidth="800" MinHeight="450" MinWidth="800">
     <Window.Resources>
         <mvvm:ProsmotrTournStat x:Key="vm"/>
     </Window.Resources>

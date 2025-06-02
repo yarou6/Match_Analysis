@@ -8,7 +8,7 @@
         xmlns:tool="clr-namespace:Match_Analysis.Tools"
         DataContext="{DynamicResource vm}"
         mc:Ignorable="d"
-        Title="EditPlayerHistory" Height="265" Width="700" MaxHeight="265" MaxWidth="700" MinHeight="265" MinWidth="700">
+        Title="Добавление/Изменение истории игрока" Height="265" Width="700" MaxHeight="265" MaxWidth="700" MinHeight="265" MinWidth="700">
     <Window.Resources>
         <mvvm:AddEditPlayerHistory x:Key="vm"/>
         <tool:ReleaseDateConverter x:Key="ReleaseDateConverter"/>

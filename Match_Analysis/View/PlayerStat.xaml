@@ -7,7 +7,7 @@
         xmlns:mvvm="clr-namespace:Match_Analysis.VM"
         DataContext="{DynamicResource vm}"
         mc:Ignorable="d"
-        Title="PlayerStat" Height="450" Width="800" MaxHeight="450" MaxWidth="800" MinHeight="450" MinWidth="800">
+        Title="История игрока" Height="450" Width="800" MaxHeight="450" MaxWidth="800" MinHeight="450" MinWidth="800">
     <Window.Resources>
         <mvvm:ProsmotrPlayerStat x:Key="vm"/>
     </Window.Resources>

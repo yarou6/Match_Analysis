@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Match_Analysis.View"
         xmlns:mvvm="clr-namespace:Match_Analysis.VM"
         mc:Ignorable="d"
-        Title="EditMatch" Height="390" Width="350" MaxHeight="390" MaxWidth="350" MinHeight="390" MinWidth="350">
+        Title="Добавление/Изменение матча" Height="390" Width="350" MaxHeight="390" MaxWidth="350" MinHeight="390" MinWidth="350">
     <Window.Resources>
         <mvvm:AddEditMatch x:Key="vm"/>
     </Window.Resources>

@@ -7,7 +7,7 @@
         xmlns:mvvm="clr-namespace:Match_Analysis.VM"
         DataContext="{DynamicResource vm}"
         mc:Ignorable="d"
-        Title="MatchHistory" Height="350" Width="600" MaxHeight="350" MaxWidth="600" MinHeight="350" MinWidth="600">
+        Title="История матчей" Height="350" Width="600" MaxHeight="350" MaxWidth="600" MinHeight="350" MinWidth="600">
     <Window.Resources>
         <mvvm:ProsmotrMatchHistory x:Key="vm"/>
     </Window.Resources>
