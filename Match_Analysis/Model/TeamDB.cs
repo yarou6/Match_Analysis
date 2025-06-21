@@ -11,52 +11,93 @@ namespace Match_Analysis.Model
 {
     public class TeamDB
     {
-        DbConnection connection;
 
-        private TeamDB(DbConnection db)
+        private readonly IConnectionWrapper connection;
+
+        public TeamDB(IConnectionWrapper connection)
         {
-            this.connection = db;
+            this.connection = connection;
         }
 
         public bool Insert(Team team)
         {
-            bool result = false;
             if (connection == null)
-                return result;
+                return false;
 
             if (connection.OpenConnection())
             {
-                MySqlCommand cmd = connection.CreateCommand("insert into `team` Values (0, @Title, @Coach, @City);select LAST_INSERT_ID();");
+                var cmd = connection.CreateCommand("insert into `team` Values (0, @Title, @Coach, @City);select LAST_INSERT_ID();");
 
-                // путем добавления значений в запрос через параметры мы используем экранирование опасных символов
-                cmd.Parameters.Add(new MySqlParameter("Title", team.Title));
-                cmd.Parameters.Add(new MySqlParameter("Coach", team.Coach));
-                cmd.Parameters.Add(new MySqlParameter("City", team.City));
+                cmd.AddParameter("Title", team.Title);
+                cmd.AddParameter("Coach", team.Coach);
+                cmd.AddParameter("City", team.City);
+
                 try
                 {
-                    // выполняем запрос через ExecuteScalar, получаем id вставленной записи
-                    // если нам не нужен id, то в запросе убираем часть select LAST_INSERT_ID(); и выполняем команду через ExecuteNonQuery
                     int id = (int)(ulong)cmd.ExecuteScalar();
                     if (id > 0)
                     {
-                        MessageBox.Show(id.ToString());
-                        // назначаем полученный id обратно в объект для дальнейшей работы
                         team.Id = id;
-                        result = true;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Запись не добавлена");
+                        return true;
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    // Обработка ошибки
+                }
+                finally
+                {
+                    connection.CloseConnection();
                 }
             }
-            connection.CloseConnection();
-            return result;
+            return false;
         }
+        //DbConnection connection;
+
+        //private TeamDB(DbConnection db)
+        //{
+        //    this.connection = db;
+        //}
+
+        //public bool Insert(Team team)
+        //{
+        //    bool result = false;
+        //    if (connection == null)
+        //        return result;
+
+        //    if (connection.OpenConnection())
+        //    {
+        //        MySqlCommand cmd = connection.CreateCommand("insert into `team` Values (0, @Title, @Coach, @City);select LAST_INSERT_ID();");
+
+        //        // путем добавления значений в запрос через параметры мы используем экранирование опасных символов
+        //        cmd.Parameters.Add(new MySqlParameter("Title", team.Title));
+        //        cmd.Parameters.Add(new MySqlParameter("Coach", team.Coach));
+        //        cmd.Parameters.Add(new MySqlParameter("City", team.City));
+        //        try
+        //        {
+        //            // выполняем запрос через ExecuteScalar, получаем id вставленной записи
+        //            // если нам не нужен id, то в запросе убираем часть select LAST_INSERT_ID(); и выполняем команду через ExecuteNonQuery
+        //            int id = (int)(ulong)cmd.ExecuteScalar();
+        //            if (id > 0)
+        //            {
+        //                MessageBox.Show(id.ToString());
+        //                // назначаем полученный id обратно в объект для дальнейшей работы
+        //                team.Id = id;
+        //                result = true;
+        //            }
+        //            else
+        //            {
+        //                MessageBox.Show("Запись не добавлена");
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            MessageBox.Show(ex.Message);
+        //        }
+        //    }
+        //    connection.CloseConnection();
+        //    return result;
+        //}
 
         internal List<Team> SelectAll()
         {
@@ -112,9 +153,9 @@ namespace Match_Analysis.Model
             if (connection.OpenConnection())
             {
                 var mc = connection.CreateCommand($"update `team` set `title`=@title, `coach`=@coach, `city`=@city where `id` = {edit.Id}");
-                mc.Parameters.Add(new MySqlParameter("title", edit.Title));
-                mc.Parameters.Add(new MySqlParameter("coach", edit.Coach));
-                mc.Parameters.Add(new MySqlParameter("city", edit.City));
+                mc.AddParameter("title", edit.Title);
+                mc.AddParameter("coach", edit.Coach);
+                mc.AddParameter("city", edit.City);
 
                 try
                 {
@@ -158,7 +199,16 @@ namespace Match_Analysis.Model
         public static TeamDB GetDb()
         {
             if (db == null)
-                db = new TeamDB(DbConnection.GetDbConnection());
+            {
+                // Получаем реальный DbConnection
+                var realDbConnection = DbConnection.GetDbConnection();
+
+                // Оборачиваем его в ConnectionWrapper, который реализует IConnectionWrapper
+                var connectionWrapper = new ConnectionWrapper(realDbConnection);
+
+                // Передаём обёртку в TeamDB
+                db = new TeamDB(connectionWrapper);
+            }
             return db;
         }
     }

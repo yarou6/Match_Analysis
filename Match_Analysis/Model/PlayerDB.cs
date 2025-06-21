@@ -12,55 +12,48 @@ namespace Match_Analysis.Model
 {
     public class PlayerDB
     {
-        DbConnection connection;
+        private readonly IConnectionWrapper connection;
 
-        private PlayerDB(DbConnection db)
+        public PlayerDB(IConnectionWrapper connection)
         {
-            this.connection = db;
+            this.connection = connection;
         }
 
         public bool Insert(Player player)
         {
-            bool result = false;
             if (connection == null)
-                return result;
+                return false;
 
             if (connection.OpenConnection())
             {
-                MySqlCommand cmd = connection.CreateCommand("insert into `player` Values (0, @age, @PlayerPosition, @Surname, @Name, @Patronymic, @TeamId);select LAST_INSERT_ID();");
+                var cmd = connection.CreateCommand("insert into `player` Values (0, @age, @PlayerPosition, @Surname, @Name, @Patronymic, @TeamId);select LAST_INSERT_ID();");
 
-                // путем добавления значений в запрос через параметры мы используем экранирование опасных символов
-                cmd.Parameters.Add(new MySqlParameter("age", player.Age));
-                cmd.Parameters.Add(new MySqlParameter("PlayerPosition", player.PlayerPosition));
-                cmd.Parameters.Add(new MySqlParameter("Surname", player.Surname));
-                cmd.Parameters.Add(new MySqlParameter("Name", player.Name));
-                cmd.Parameters.Add(new MySqlParameter("TeamId", player.TeamId));
-                cmd.Parameters.Add(new MySqlParameter("Patronymic", player.Patronymic));
+                cmd.AddParameter("age", player.Age);
+                cmd.AddParameter("PlayerPosition", player.PlayerPosition);
+                cmd.AddParameter("Surname", player.Surname);
+                cmd.AddParameter("Name", player.Name);
+                cmd.AddParameter("TeamId", player.TeamId);
+                cmd.AddParameter("Patronymic", player.Patronymic);
 
                 try
                 {
-                    // выполняем запрос через ExecuteScalar, получаем id вставленной записи
-                    // если нам не нужен id, то в запросе убираем часть select LAST_INSERT_ID(); и выполняем команду через ExecuteNonQuery
                     int id = (int)(ulong)cmd.ExecuteScalar();
                     if (id > 0)
                     {
-                        MessageBox.Show(id.ToString());
-                        // назначаем полученный id обратно в объект для дальнейшей работы
                         player.Id = id;
-                        result = true;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Запись не добавлена");
+                        return true;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    return false;
+                }
+                finally
+                {
+                    connection.CloseConnection();
                 }
             }
-            connection.CloseConnection();
-            return result;
+            return false;
         }
 
         internal List<Player> SelectAll()
@@ -150,67 +143,78 @@ namespace Match_Analysis.Model
             return players;
         }
 
-        internal bool Update(Player edit)
+        public bool Update(Player edit)
         {
-            bool result = false;
             if (connection == null)
-                return result;
+                return false;
 
             if (connection.OpenConnection())
             {
-                var mc = connection.CreateCommand($"update `player` set `age`=@age, `player_position`=@player_position, `surname`=@surname, `name`=@name, `patronymic`=@patronymic, `team_id`=@team_id where `id` = {edit.Id}");
-                mc.Parameters.Add(new MySqlParameter("age", edit.Age));
-                mc.Parameters.Add(new MySqlParameter("player_position", edit.PlayerPosition));
-                mc.Parameters.Add(new MySqlParameter("surname", edit.Surname));
-                mc.Parameters.Add(new MySqlParameter("name", edit.Name));
-                mc.Parameters.Add(new MySqlParameter("patronymic", edit.Patronymic));
-                mc.Parameters.Add(new MySqlParameter("team_id", edit.TeamId));
+                var cmd = connection.CreateCommand($"update `player` set `age`=@age, `player_position`=@player_position, `surname`=@surname, `name`=@name, `patronymic`=@patronymic, `team_id`=@team_id where `id` = {edit.Id}");
+
+                cmd.AddParameter("age", edit.Age);
+                cmd.AddParameter("player_position", edit.PlayerPosition);
+                cmd.AddParameter("surname", edit.Surname);
+                cmd.AddParameter("name", edit.Name);
+                cmd.AddParameter("patronymic", edit.Patronymic);
+                cmd.AddParameter("team_id", edit.TeamId);
+
                 try
                 {
-                    mc.ExecuteNonQuery();
-                    result = true;
+                    cmd.ExecuteNonQuery();
+                    return true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    return false;
+                }
+                finally
+                {
+                    connection.CloseConnection();
                 }
             }
-            connection.CloseConnection();
-            return result;
+            return false;
         }
 
 
-        internal bool Remove(Player remove)
+        public bool Remove(Player remove)
         {
-            bool result = false;
             if (connection == null)
-                return result;
+                return false;
 
             if (connection.OpenConnection())
             {
-                var mc = connection.CreateCommand($"delete from `player` where `id` = {remove.Id}");
+                var cmd = connection.CreateCommand($"delete from `player` where `id` = {remove.Id}");
+
                 try
                 {
-                    mc.ExecuteNonQuery();
-                    result = true;
+                    cmd.ExecuteNonQuery();
+                    return true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    return false;
+                }
+                finally
+                {
+                    connection.CloseConnection();
                 }
             }
-            connection.CloseConnection();
-            return result;
+            return false;
         }
+
 
         static PlayerDB db;
         public static PlayerDB GetDb()
         {
             if (db == null)
-                db = new PlayerDB(DbConnection.GetDbConnection());
+            {
+                var connection = DbConnection.GetDbConnection();
+                var connectionWrapper = new ConnectionWrapper(connection);
+                db = new PlayerDB(connectionWrapper);
+            }
             return db;
         }
-
 
     }
 }

@@ -66,7 +66,18 @@ namespace Match_Analysis.VM
         public int MatchId { get; set; }
         public int GoalCount { get; set; }
         public int AssistCount { get; set; }
-        public Team Team { get; private set; }
+        public Team Team
+        {
+            get => team;
+            set
+            {
+                if (team != value)
+                {
+                    team = value;
+                    Signal();
+                }
+            }
+        }
         public void InitializePlayers(int matchId, int goals, Team team, DateTime date)
         {
             MatchId = matchId;
@@ -249,6 +260,7 @@ namespace Match_Analysis.VM
         }
         Action close;
         private ObservableCollection<Player> players = new();
+        private Team team;
         internal void SetClose(Action close)
         {
             this.close = close;
