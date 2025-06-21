@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace Match_Analysis.Model
 {
-    internal class PlayerHistoryDB
+    public class PlayerHistoryDB
     {
 
         DbConnection connection;

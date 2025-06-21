@@ -11,7 +11,7 @@ using Match_Analysis.View;
 
 namespace Match_Analysis.VM
 {
-    internal class AddEditMatch : BaseVM
+    public class AddEditMatch : BaseVM
     {
 
         private Match_Analysis.Model.Match newMatch = new();

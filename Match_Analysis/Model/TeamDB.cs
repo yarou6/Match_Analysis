@@ -9,7 +9,7 @@ using Match_Analysis.View;
 
 namespace Match_Analysis.Model
 {
-    internal class TeamDB
+    public class TeamDB
     {
         DbConnection connection;
 

@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace Match_Analysis.Model
 {
-    internal class PlayerStatisticsDB
+    public class PlayerStatisticsDB
     {
         DbConnection connection;
 

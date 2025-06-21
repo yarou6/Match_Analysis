@@ -7,10 +7,9 @@ using Match_Analysis.Model;
 using System.Windows;
 using System.Collections.ObjectModel;
 using Match_Analysis.View;
-
 namespace Match_Analysis.VM
 {
-    internal class AddEditPlayer : BaseVM
+    public class AddEditPlayer : BaseVM
     {
 
         private Player newPlayer = new();

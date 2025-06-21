@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace Match_Analysis.VM
 {
-    internal class AddEditPlayerHistory : BaseVM
+    public class AddEditPlayerHistory : BaseVM
     {
 
         public DateTime? EntryDate

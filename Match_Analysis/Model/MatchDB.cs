@@ -11,7 +11,7 @@ using System.Xml.Linq;
 
 namespace Match_Analysis.Model
 {
-    internal class MatchDB
+    public class MatchDB
     {
         DbConnection connection;
 

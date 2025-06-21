@@ -10,7 +10,7 @@ using Match_Analysis.Model;
 
 namespace Match_Analysis.VM
 {
-    internal class AddInfPlayer : BaseVM
+    public class AddInfPlayer : BaseVM
     {
         public ObservableCollection<Player> Players
         {

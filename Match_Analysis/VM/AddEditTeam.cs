@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace Match_Analysis.VM
 {
-    internal class AddEditTeam : BaseVM
+    public class AddEditTeam : BaseVM
     {
 
         private Team newTeam = new();

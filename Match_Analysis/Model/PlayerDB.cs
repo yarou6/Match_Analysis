@@ -10,7 +10,7 @@ using System.Windows.Controls;
 
 namespace Match_Analysis.Model
 {
-    internal class PlayerDB
+    public class PlayerDB
     {
         DbConnection connection;
 

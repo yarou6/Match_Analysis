@@ -8,7 +8,7 @@ using MySqlConnector;
 
 namespace Match_Analysis.Model
 {
-    internal class DbConnection
+    public class DbConnection
     {
         MySqlConnection _connection;
 
